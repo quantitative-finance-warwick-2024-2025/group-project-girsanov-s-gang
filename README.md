@@ -1,6 +1,17 @@
+# Project Goal
 
-Hamza was s here the goal to price american options using differnet technieues  - Antithetic, Importnace, Naive GBM, Control variate, Stratified. Then test them and do some analysis with eahc other and the actual true prices. 
+The goal of this project is to **price American options** using:
 
+1. **Antithetic Variates**
+2. **Importance Sampling**
+3. **Naive GBM (Geometric Brownian Motion)**
+4. **Control Variates**
+5. **Stratified Sampling**
+
+The analysis willbe :
+
+- Comparing the results of each technique with **actual true prices**.
+- Evaluating the **accuracy**, **variance**, and **computational efficiency** of each method.
 
 
 
