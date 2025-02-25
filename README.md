@@ -1,4 +1,4 @@
-# Project Goal
+# Project Goal - H
 
 The goal of this project is to **price American options** using:
 
