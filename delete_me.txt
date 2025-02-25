@@ -1,0 +1,101 @@
+@startuml
+' Keep margins small
+skinparam diagramMargin 10
+skinparam shadowing false
+
+' Force wrapping at ~100 characters
+skinparam wrapWidth 100
+
+' Make fonts a bit smaller
+skinparam defaultFontSize 11
+skinparam roundCorner 15
+
+' Hide attribute icons so lines wrap more easily
+skinparam classAttributeIconSize 0
+
+' Try left-to-right direction
+left to right direction
+
+class PricingEngine {
+    + calculatePrice(options: Options, spot: double, riskFreeRate: double, volatility: double, numSimulations: unsigned int): double
+    + calculatePriceStatic(options: Options, spot: double, riskFreeRate: double, volatility: double, numSimulations: unsigned int): double
+    + calculatePriceNaive(options: Options, spot: double, riskFreeRate: double, volatility: double, numSimulations: unsigned int): double
+}
+
+rectangle "Options" {
+  class Option {
+      - strike: double
+      - expiry: double
+      - type: Type
+      + Option(strike: double, expiry: double, type: Type)
+      + payoff(underlyingPrice: double): double
+      + getStrike(): double
+      + getExpiry(): double
+      + getType(): Type
+  }
+  class AsianOption {
+      - averagingType: AveragingType
+      - averagingPeriods: unsigned int
+      + AsianOption(strike: double, expiry: double, optionType: Type, averagingType: AveragingType, averagingPeriods: unsigned int)
+      + getAveragingType(): AveragingType
+      + getAveragingPeriods(): unsigned int
+  }
+
+  enum Type {
+      Call
+      Put
+  }
+}
+
+enum AveragingType {
+    Arithmetic
+    Geometric
+}
+
+rectangle "Tests" {
+  class TestPricingEngine {
+      + TestPricingEngine(strike: double, expiry: double, type: Type)
+      + tests for each pricing algorithm()
+  }
+  class TestOption {
+      + TestOption(strike: double, expiry: double, type: Type)
+  }
+  class TestAsianOption {
+      + TestAsianOption(strike: double, expiry: double, type: Type)
+  }
+}
+
+rectangle "Analysis" {
+
+  class EfficiencyWriter {
+      + writeData(filename: std::string)
+  }
+
+  class ToleranceWriter {
+      + printMethod(using = doublePricingMethod(Options, double, double, double, unsigned int))
+      + writeData(filename: std::string, optionType: OptionType, averagingType: AsianOptionAveragingType, pricingMethod: PricingMethod)
+  }
+
+  class ConvergenceWriter {
+      + printMethod(using = doublePricingMethod(Options, double, double, double, unsigned int))
+      + writeData(filename: std::string, optionType: OptionType, averagingType: AsianOptionAveragingType, pricingMethod: PricingMethod)
+  }
+
+  class SpotOptionWriter {
+      + printMethod(using = doublePricingMethod(Options, double, double, double, unsigned int))
+      + writeData(filename: std::string, optionType: OptionType, averagingType: AsianOptionAveragingType, pricingMethod: PricingMethod)
+  }
+
+  class OptionPriceVolatilityWriter {
+      + printMethod(using = doublePricingMethod(Options, double, double, double, unsigned int))
+      + writeData(filename: std::string, optionType: OptionType, averagingType: AsianOptionAveragingType, pricingMethod: PricingMethod)
+  }
+}
+
+Option <|-- AsianOption
+PricingEngine <-- Option : uses
+TestPricingEngine --> PricingEngine : tests
+TestOption --> Option : tests
+TestAsianOption --> AsianOption : tests
+
+@enduml
