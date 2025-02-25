@@ -1,3 +1,15 @@
+
+Hamza was s here the goal to price american options using differnet technieues  - Antithetic, Importnace, Naive GBM, Control variate, Stratified. Then test them and do some analysis with eahc other and the actual true prices. 
+
+
+
+
+
+
+
+
+
+
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=18123827)
 # IB9JHO Group Project
 This is a blank template for your group to implement your project in the IB9JHO environment.
