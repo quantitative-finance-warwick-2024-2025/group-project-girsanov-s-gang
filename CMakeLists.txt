@@ -1,21 +1,44 @@
-# Minimum required version of CMake
-cmake_minimum_required(VERSION 3.10)
+# Specify the minimum version for CMake
+cmake_minimum_required(VERSION 3.14)
 
-# Project name
-project(MyProgram)
+# Project's name
+project(IB9JHO_Group_Project)
 
-# Set C++ standards
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+add_executable(Girsanov_gang_proj
+    src/main.cpp
+    src/AsianOption.cpp
+    src/PricingEngine.cpp
+    src/Option.cpp
+    src/BarrierOption.cpp
+    src/OptionPricerBarrier.cpp
+)
 
-add_compile_options(-Wall -Wextra)
-
-# Add more source files here if needed
-set(SRC_FILES ${CMAKE_SOURCE_DIR}/src/my_new_class1.cpp ${CMAKE_SOURCE_DIR}/src/my_new_class2.cpp)
-
-add_executable(my_program ${SRC_FILES} ${CMAKE_SOURCE_DIR}/src/main.cpp)
-
-####################### TESTING STUFF STARTS HERE ###########################################################
-
+# Enable testing functionality
 enable_testing()
+
+# Include the FetchContent module
+include(FetchContent)
+
+# Attempt to download and configure GoogleTest
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG        release-1.11.0
+)
+
+FetchContent_MakeAvailable(googletest)
+
+# Add source files directory
+#add_subdirectory(src)
+
+# Add test files directory
 add_subdirectory(tests)
+
+
+# Add library
+add_library(ib9jho_library src/Option.cpp src/AsianOption.cpp src/PricingEngine.cpp)
+
+# Include directories for header files
+target_include_directories(ib9jho_library PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
