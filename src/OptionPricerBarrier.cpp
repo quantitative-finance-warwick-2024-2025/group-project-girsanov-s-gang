@@ -45,7 +45,7 @@ void OptionPricerBarrier::generatePath(const BarrierOption& option, double S0, d
     result.finalPrice = currentPrice;
 }
 
-// Black-Scholes price for vanilla options (control variate)
+// Black-Scholes price
 double OptionPricerBarrier::blackScholesPrice(double S, double K, double T, 
                                             double r, double sigma, Option::Type type) {
     const double d1 = (std::log(S/K) + (r + 0.5*sigma*sigma)*T) / (sigma*std::sqrt(T));
