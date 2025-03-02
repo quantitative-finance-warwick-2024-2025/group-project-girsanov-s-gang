@@ -14,7 +14,7 @@ public:
                                           double r, double sigma, unsigned int numSimulations);
     
     static double calculatePriceImportanceSampling(const BarrierOption& option, double S0,
-                                                  double r, double sigma, unsigned int numSimulations);
+                                                 double r, double sigma, unsigned int numSimulations);
     
     static double calculatePriceControlVariates(const BarrierOption& option, double S0,
                                                double r, double sigma, unsigned int numSimulations);
