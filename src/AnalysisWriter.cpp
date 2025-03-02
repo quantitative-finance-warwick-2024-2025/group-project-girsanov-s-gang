@@ -72,7 +72,7 @@ void OptionPriceVolatilityWriter::write(const std::string& filename) {
     }
 }
 
-// EfficiencyWriter implementation (fixed)
+// EfficiencyWriter implementation
 EfficiencyWriter::EfficiencyWriter(PricingEngineBarrier& engine,
                                   double spot,
                                   double riskFreeRate,
@@ -90,7 +90,7 @@ void EfficiencyWriter::write(const std::string& filename) {
     std::ofstream out(filename);
     out << "Method,Price,Time(ms)\n";
     
-    // C++11 compatible implementation
+    //compatible implementation
     typedef std::pair<std::string, std::function<double()>> MethodPair;
     const std::vector<MethodPair> methods = {
         MethodPair("Naive", [&]() { 
