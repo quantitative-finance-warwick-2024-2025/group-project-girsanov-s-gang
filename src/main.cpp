@@ -7,7 +7,6 @@
 #include "AnalysisWriter.hpp"
 #include "PricingEngineBarrier.hpp"
 
-// Adapter class to bridge OptionPricerBarrier with PricingEngineBarrier interface
 class OptionPricerAdapter : public PricingEngineBarrier {
 public:
     double priceOption(double spot, double r, double sigma, int simulations) override {
