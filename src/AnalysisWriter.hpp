@@ -71,7 +71,7 @@ private:
     int simulations_;
 };
 
-// Modified efficiency comparison writer (strategy-free)
+// Modified efficiency
 class EfficiencyWriter : public AnalysisWriter {
 public:
     EfficiencyWriter(PricingEngineBarrier& engine,
