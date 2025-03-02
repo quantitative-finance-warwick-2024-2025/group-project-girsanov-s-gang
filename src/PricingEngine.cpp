@@ -143,3 +143,42 @@ double PricingEngine::calculatePriceGBM(const Option& option, double spot, doubl
 }
 
 
+double PricingEngine::calculatePriceBarrierNaive(const BarrierOption &option, double spot, double riskFreeRate, double volatility, unsigned int numSimulations) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<double> dist(0.0, 1.0);
+
+    double dt = option.getExpiry();
+    double sumPayoffs = 0.0;
+
+    for (unsigned int i = 0; i < numSimulations; ++i) {
+        double spotPath = spot;
+        bool barrierHit = false;
+
+        for (unsigned int j = 0; j < 100; ++j) {  // 100 steps for Monte Carlo simulation
+            double randNormal = dist(gen);
+            spotPath *= std::exp((riskFreeRate - 0.5 * volatility * volatility) * dt +
+                                 volatility * std::sqrt(dt) * randNormal);
+
+            if (option.getBarrierType() == BarrierOption::BarrierType::KnockOut && spotPath >= option.getBarrierLevel()) {
+                barrierHit = true;
+                break;
+            }
+
+            if (option.getBarrierType() == BarrierOption::BarrierType::KnockIn && spotPath >= option.getBarrierLevel()) {
+                barrierHit = true;
+            }
+        }
+
+        if (option.getBarrierType() == BarrierOption::BarrierType::KnockOut && barrierHit) {
+            sumPayoffs += 0.0;
+        } else if (option.getBarrierType() == BarrierOption::BarrierType::KnockIn && !barrierHit) {
+            sumPayoffs += 0.0;
+        } else {
+            sumPayoffs += option.payoff(spotPath);
+        }
+    }
+
+    double price = (sumPayoffs / numSimulations) * std::exp(-riskFreeRate * option.getExpiry());
+    return price;
+}

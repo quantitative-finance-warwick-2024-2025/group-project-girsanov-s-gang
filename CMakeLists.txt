@@ -15,27 +15,8 @@ add_executable(Girsanov_gang_proj
     src/OptionPricerBarrier.cpp
 )
 
-# Enable testing functionality
-enable_testing()
-
-# Include the FetchContent module
-include(FetchContent)
-
-# Attempt to download and configure GoogleTest
-FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG        release-1.11.0
-)
-
-FetchContent_MakeAvailable(googletest)
-
-# Add source files directory
-#add_subdirectory(src)
-
 # Add test files directory
 add_subdirectory(tests)
-
 
 # Add library
 add_library(ib9jho_library src/Option.cpp src/AsianOption.cpp src/PricingEngine.cpp)

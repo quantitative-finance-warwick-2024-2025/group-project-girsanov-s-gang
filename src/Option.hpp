@@ -4,6 +4,9 @@
 class Option {
 public:
     enum class Type { Call, Put };
+    
+    virtual ~Option() = default;
+
 
     Option(double strike, double expiry, Type type);
     virtual double payoff(double underlyingPrice) const = 0;
