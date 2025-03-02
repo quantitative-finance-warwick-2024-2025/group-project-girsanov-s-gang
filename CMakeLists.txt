@@ -13,6 +13,7 @@ add_executable(Girsanov_gang_proj
     src/Option.cpp
     src/BarrierOption.cpp
     src/OptionPricerBarrier.cpp
+    src/AnalysisWriter.cpp
 )
 
 # Add test files directory
