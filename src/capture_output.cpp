@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <filesystem>
+#include <stdexcept>
 
 /// @brief Runs the executable and redirects its output to the specified file.
 /// @param cmd the executable path
@@ -12,10 +13,12 @@ void capture_output(const std::string& cmd, const std::string& outputFile) {
     outputFilePath = outputFilePath.lexically_normal();
 
     #if defined(_WIN32) || defined(_WIN64)
-        std::string fullCmd = cmdPath.string() + " > \"" + outputFilePath.string() + "\"";
-    #else
-        std::string fullCmd = cmdPath.string() + " > \"" + outputFilePath.string() + "\" 2>&1";
-    #endif
+    // Use cmd.exe /C so that the redirection is handled correctly
+    std::string fullCmd = "cmd.exe /C \"" + cmdPath.string() + "\" > \"" + outputFilePath.string() + "\"";
+#else
+    std::string fullCmd = "\"" + cmdPath.string() + "\" > \"" + outputFilePath.string() + "\" 2>&1";
+#endif
+
 
     int ret = std::system(fullCmd.c_str());
 
@@ -36,10 +39,11 @@ void capture_output(const std::string& cmd, const std::string& inputFile, const 
     outputFilePath = outputFilePath.lexically_normal();
 
     #if defined(_WIN32) || defined(_WIN64)
-        std::string fullCmd = cmdPath.string() + " < \"" + inputFilePath.string() + "\" > \"" + outputFilePath.string() + "\"";
-    #else
-        std::string fullCmd = cmdPath.string() + " < \"" + inputFilePath.string() + "\" > \"" + outputFilePath.string() + "\" 2>&1";
-    #endif
+    std::string fullCmd = "cmd.exe /C \"" + cmdPath.string() + "\" < \"" + inputFilePath.string() + "\" > \"" + outputFilePath.string() + "\"";
+#else
+    std::string fullCmd = "\"" + cmdPath.string() + "\" < \"" + inputFilePath.string() + "\" > \"" + outputFilePath.string() + "\" 2>&1";
+#endif
+
 
     int ret = std::system(fullCmd.c_str());
 
