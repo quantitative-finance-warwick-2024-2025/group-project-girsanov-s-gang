@@ -1,6 +1,6 @@
 # Project Goal - H
 
-The goal of this project is to **price American options** using:
+The goal of this project is to **price Barrier options** using:
 
 1. **Antithetic Variates**
 2. **Importance Sampling**
