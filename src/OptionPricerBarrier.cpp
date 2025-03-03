@@ -12,7 +12,7 @@ double OptionPricerBarrier::normalCDF(double x) {
 // Generate single Monte Carlo path with optional drift adjustment
 void OptionPricerBarrier::generatePath(const BarrierOption& option, double S0, double r, double sigma,
                                       PathResult& result, double driftAdjust) {
-    static std::mt19937 gen(std::random_device{}());
+    static std::mt19937 gen(42);
     std::normal_distribution<> d(0,1);
     
     const double T = option.getExpiry();
@@ -123,7 +123,9 @@ double OptionPricerBarrier::calculatePriceControlVariates(const BarrierOption& o
         cov += (barrierPayoffs[i] - meanBarrier) * (vanillaPayoffs[i] - meanVanilla);
         varVanilla += std::pow(vanillaPayoffs[i] - meanVanilla, 2);
     }
-    const double beta = cov / varVanilla;
+    const double epsilon = 1e-8;
+    const double beta = (std::abs(varVanilla) < epsilon) ? 0.0 : cov / varVanilla;
+    
     
     // Adjusted price with control variate
     return std::exp(-r*T) * (meanBarrier - beta*(meanVanilla - bsPrice));
