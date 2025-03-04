@@ -10,8 +10,6 @@ set(CMAKE_CXX_STANDARD 17)
 # Main application executable (if needed)
 add_executable(Girsanov_gang_proj
     src/main.cpp
-    src/AsianOption.cpp
-    src/PricingEngine.cpp
     src/Option.cpp
     src/BarrierOption.cpp
     src/OptionPricerBarrier.cpp
@@ -24,8 +22,6 @@ add_definitions(-DPROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}")
 # Create a library with common sources for option pricing and barrier option logic.
 add_library(ib9jho_library 
     src/Option.cpp 
-    src/AsianOption.cpp 
-    src/PricingEngine.cpp
     src/BarrierOption.cpp
     src/OptionPricerBarrier.cpp
     src/AnalysisWriter.cpp
