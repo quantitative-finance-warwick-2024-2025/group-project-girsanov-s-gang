@@ -3,19 +3,18 @@
 
 #include <string>
 #include <vector>
-#include "PricingEngineBarrier.hpp"
+#include "BarrierOption.hpp"
+#include "OptionPricerBarrier.hpp"
 
-// Abstract base class for all analysis writers
 class AnalysisWriter {
 public:
     virtual ~AnalysisWriter() = default;
     virtual void write(const std::string& filename) = 0;
 };
 
-// Convergence analysis writer
 class ConvergenceWriter : public AnalysisWriter {
 public:
-    ConvergenceWriter(PricingEngineBarrier& engine, 
+    ConvergenceWriter(const BarrierOption& option,
                     double spot,
                     double riskFreeRate,
                     double volatility,
@@ -24,17 +23,16 @@ public:
     void write(const std::string& filename) override;
 
 private:
-    PricingEngineBarrier& engine_;
+    BarrierOption option_;
     double spot_;
     double r_;
     double sigma_;
     std::vector<int> simulationSteps_;
 };
 
-// Error tolerance analysis writer
 class ToleranceWriter : public AnalysisWriter {
 public:
-    ToleranceWriter(PricingEngineBarrier& engine,
+    ToleranceWriter(const BarrierOption& option,
                   double spot,
                   double riskFreeRate,
                   double volatility,
@@ -44,7 +42,7 @@ public:
     void write(const std::string& filename) override;
 
 private:
-    PricingEngineBarrier& engine_;
+    BarrierOption option_;
     double spot_;
     double r_;
     double sigma_;
@@ -52,10 +50,9 @@ private:
     double tolerance_;
 };
 
-// Volatility sensitivity analysis writer
 class OptionPriceVolatilityWriter : public AnalysisWriter {
 public:
-    OptionPriceVolatilityWriter(PricingEngineBarrier& engine,
+    OptionPriceVolatilityWriter(const BarrierOption& option,
                               double spot,
                               double riskFreeRate,
                               const std::vector<double>& volatilities,
@@ -64,17 +61,16 @@ public:
     void write(const std::string& filename) override;
 
 private:
-    PricingEngineBarrier& engine_;
+    BarrierOption option_;
     double spot_;
     double r_;
     std::vector<double> volatilities_;
     int simulations_;
 };
 
-// Modified efficiency
 class EfficiencyWriter : public AnalysisWriter {
 public:
-    EfficiencyWriter(PricingEngineBarrier& engine,
+    EfficiencyWriter(const BarrierOption& option,
                    double spot,
                    double riskFreeRate,
                    double volatility,
@@ -83,17 +79,16 @@ public:
     void write(const std::string& filename) override;
 
 private:
-    PricingEngineBarrier& engine_;
+    BarrierOption option_;
     double spot_;
     double r_;
     double sigma_;
     int simulations_;
 };
 
-// Spot price sensitivity analysis writer
 class SpotOptionWriter : public AnalysisWriter {
 public:
-    SpotOptionWriter(PricingEngineBarrier& engine,
+    SpotOptionWriter(const BarrierOption& option,
                    const std::vector<double>& spots,
                    double riskFreeRate,
                    double volatility,
@@ -102,7 +97,7 @@ public:
     void write(const std::string& filename) override;
 
 private:
-    PricingEngineBarrier& engine_;
+    BarrierOption option_;
     std::vector<double> spots_;
     double r_;
     double sigma_;
