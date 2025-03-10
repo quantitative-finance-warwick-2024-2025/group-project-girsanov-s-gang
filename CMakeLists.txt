@@ -4,9 +4,10 @@ cmake_minimum_required(VERSION 3.14)
 # Project's name
 project(IB9JHO_Group_Project)
 
+
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
-
+enable_testing()
 # Main application executable (if needed)
 add_executable(Girsanov_gang_proj
     src/main.cpp
