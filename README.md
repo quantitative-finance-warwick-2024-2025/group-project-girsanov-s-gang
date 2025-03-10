@@ -1,17 +1,72 @@
-# Project Goal - H
+# IB9JHO Group Project — Barrier Option Pricing
 
-The goal of this project is to **price Barrier options** using:
+## Project Goal
 
-1. **Antithetic Variates**
-2. **Importance Sampling**
-3. **Naive GBM (Geometric Brownian Motion)**
-4. **Control Variates**
-5. **Stratified Sampling**
+Price barrier options using the following techniques:
+- **Antithetic Variates**
+- **Importance Sampling**
+- **Naive Geometric Brownian Motion (GBM)**
+- **Control Variates**
 
-The analysis willbe :
+### Analysis Focus
+- Compare each method with true analytical prices.
+- Evaluate accuracy, variance, and computational efficiency.
 
-- Comparing the results of each technique with **actual true prices**.
-- Evaluating the **accuracy**, **variance**, and **computational efficiency** of each method.
+## Building and Running the Project
+
+### Building the Project
+1. Create and navigate to the build directory:
+   ```bash
+   mkdir build
+   cd build
+From the build directory, run the executable:
+```bash
+./Girsanov_gang_proj
+```
+
+Upon execution, the program will display the pricing results for various techniques including:
+
+- Naive Monte Carlo  
+- Antithetic Variates  
+- Importance Sampling  
+- Control Variates  
+
+Status messages will also indicate that the following analyses have been saved:
+
+- Convergence analysis  
+- Volatility sensitivity analysis  
+- Spot price analysis  
+- Error tolerance analysis  
+- Efficiency comparison analysis  
+
+
+To run tests you do the following:
+
+## INPUT TESTSTSTT HERE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
