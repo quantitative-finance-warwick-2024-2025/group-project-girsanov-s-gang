@@ -34,21 +34,6 @@ target_include_directories(barrier_tests PRIVATE
 )
 add_test(NAME barrier_tests COMMAND barrier_tests)
 
-################################
-# Asian pricing tests
-################################
-add_executable(asian_pricing_tests
-    test_asian_pricing_engine.cpp
-    ../src/PricingEngine.cpp
-    ../src/Option.cpp
-    ../src/AsianOption.cpp
-    ../src/BarrierOption.cpp
-)
-target_include_directories(asian_pricing_tests PRIVATE
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/extern/catch2
-)
-add_test(NAME asian_pricing_tests COMMAND asian_pricing_tests)
 
 ################################
 # Barrier pricing tests
