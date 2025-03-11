@@ -1,49 +1,128 @@
-# IB9JHO Group Project — Barrier Option Pricing
+# IB9JHO: Barrier Option Pricing
 
-## Project Goal
+## Project Overview
+This project focuses on the quantitative pricing of barrier options—derivatives whose outcomes depend on whether an asset’s price breaches a set barrier during its life. Our approach employs Monte Carlo simulation enhanced by variance reduction techniques to obtain precise and efficient pricing estimates. The methods implemented include:
 
-Price barrier options using the following techniques:
+- **Naive Monte Carlo (GBM)**
 - **Antithetic Variates**
 - **Importance Sampling**
-- **Naive Geometric Brownian Motion (GBM)**
 - **Control Variates**
+- **Stratified Sampling**
 
-### Analysis Focus
-- Compare each method with true analytical prices.
-- Evaluate accuracy, variance, and computational efficiency.
+## Architecture and Components of the Project 
 
-## Building and Running the Project
+### 1. Option Models
+- **Base Option Class:**  
+  Contains common attributes such as strike, expiry, and option type.
+- **BarrierOption Class:**  
+  Extends the base option with barrier-specific properties (barrier level, barrier type) and custom payoff calculations based on barrier breaches.
 
-### Building the Project
-1. Create and navigate to the build directory:
+### 2. Pricing Engine
+- **Unified Interface:**  
+  An abstraction that lets users switch between different Monte Carlo pricing methods without changing the interface.
+- **Implementation Variants:**  
+  Different classes implement the simulation techniques (naive, antithetic, importance sampling, control variates, stratified sampling) to price the options.
+- **Adapter Pattern:**  
+  Bridges the gap between the interface and concrete pricing implementations.
+
+### 3. Analysis and Reporting
+- **CSV Report Generators:**  
+  Modules designed to output analysis data for:
+  - Convergence behavior
+  - Sensitivity to volatility changes
+  - Spot price impact analysis
+  - Error tolerance levels
+  - Efficiency metrics
+
+### 4. Testing Framework
+- **Automated Unit Tests:**  
+  A series of tests (using Catch2) ensure that every component—from option pricing to data analysis—functions correctly.
+
+### 5. Utilities
+- **Helper Tools:**  
+  Additional modules for output capturing and other supportive functions.
+
+## Build and Run Instructions
+
+### Requirements
+- C++ compiler supporting C++17 or newer
+- CMake (v3.14+)
+- (Optional) Catch2 framework for running unit tests
+
+### Compilation Steps
+
+#### Recommended Method (Using VSCode)
+For the smoothest experience—just like in our lectures—follow these steps:
+1. **Open VSCode.**
+2. **Navigate to:** `group-project-girsanov-s-gang`
+3. **Click "Build"** at the bottom.
+4. **Click "Run"** at the bottom.
+
+This process automatically creates a `build` folder with all the linked and compiled outputs. Inside the build folder, you'll find multiple executables that can be run with the following commands:
+```
+[add commands]
+```
+
+#### Alternative Method (For Extreme Cases)
+If the VSCode approach fails, try these command-line steps:
+1. **Clone the Repository:**  
+   Download or clone the project to your local system.
+2. **Create a Build Directory:**  
+   In your terminal at the project root, run:
    ```bash
    mkdir build
    cd build
-From the build directory, run the executable:
-```bash
-./Girsanov_gang_proj
-```
+   ```
+3. **Configure the Project with CMake:**
+   ```bash
+   cmake ..
+   ```
+4. **Build the Project:**
+   ```bash
+   cmake --build .
+   ```
 
-Upon execution, the program will display the pricing results for various techniques including:
+*Note: The command-line method is only recommended if the VSCode process does not work.*
 
-- Naive Monte Carlo  
-- Antithetic Variates  
-- Importance Sampling  
-- Control Variates  
+### Running the Application
+Once compiled, run the main executable from the build directory:
+- **Linux/Mac:**
+  ```bash
+  ./Girsanov_gang_proj
+  ```
+- **Windows:**
+  ```bash
+  Girsanov_gang_proj.exe
+  ```
 
-Status messages will also indicate that the following analyses have been saved:
+The application displays pricing results using each simulation technique and confirms the creation of analysis reports.
 
-- Convergence analysis  
-- Volatility sensitivity analysis  
-- Spot price analysis  
-- Error tolerance analysis  
-- Efficiency comparison analysis  
+## Executing Tests
+To validate the project components:
+1. Navigate to the tests folder inside the build directory:
+   ```bash
+   cd tests
+   ```
+2. Run the test programs:
+   - **On Linux/Mac:**
+     ```bash
+     ./TestBarrierOption
+     ./TestPricingEngine
+     ./TestAnalysisModule
+     ```
+   - **On Windows:**
+     ```bash
+     TestBarrierOption.exe
+     TestPricingEngine.exe
+     TestAnalysisModule.exe
+     ```
 
+## Final Thoughts
+This project demonstrates a robust implementation of Monte Carlo methods for barrier option pricing. Its modular design not only facilitates comprehensive analysis but also makes it straightforward to extend or integrate new simulation techniques in the future.
 
-To run tests you do the following:
+For more details or to contribute, please refer to the project documentation or contact the maintainers.
 
-## INPUT TESTSTSTT HERE
-
+---
 
 
 
