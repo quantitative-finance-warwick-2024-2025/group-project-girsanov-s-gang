@@ -1,0 +1,79 @@
+@startuml
+' ======================
+' Package: Options
+' ======================
+package "Options" {
+  [Option] as A
+  [BarrierOption] as B
+  ' A --> B
+  B-->A
+}
+
+' ======================
+' Package: BarrierPricers
+' ======================
+package "BarrierPricers" {
+  ' [PricingEngineBarrier (interface)] as C
+  [OptionPricerBarrier] as D
+  [OptionPricerBarrierAntithetic] as E
+  [OptionPricerBarrierIS] as F
+  [OptionPricerBarrierStratified] as G
+  ' [TestBarrierPricers (Non Official)] as TB
+
+  E-->B
+  F-->B
+  G-->B
+  ' C-->B
+  D-->B
+  ' TB -->D
+  ' TB -->E
+  ' TB -->F
+  ' TB -->G
+
+
+}
+
+' ======================
+' Package: Analysis
+' ======================
+package "Analysis" {
+  [AnalysisWriter] as I
+  ' [ConvergenceWriter] as J
+  ' [ToleranceWriter] as K
+  ' [OptionPriceVolatilityWriter] as L
+  ' [EfficiencyWriter] as M
+  ' [SpotOptionWriter] as N
+  [generate_convergence_output] as generate_covergence
+  [capture_output] as capture_ouput
+  
+  ' I --> J
+  ' I --> K
+  ' I --> L
+  ' I --> M
+  ' I --> N
+  I --> D
+  I --> B
+  capture_ouput --> generate_covergence
+
+  ' Writers use PricingEngineBarrier
+  ' J --> C
+  ' K --> C
+  ' L --> C
+  ' M --> C
+  ' N --> C
+}
+
+' ======================
+' Package: Test Executables
+' ======================
+package "Test Executables" as TE
+
+' Instead of individual test nodes and links, one consolidated link from Test Executables
+TE --> A : tests Options
+TE --> B : tests BarrierOption
+TE --> D : tests OptionPricerBarrier
+TE --> E : tests OptionPricerBarrierAntithetic
+TE --> F : tests OptionPricerBarrierIS
+TE --> G : tests OptionPricerBarrierStratified
+
+@enduml

@@ -39,7 +39,6 @@ This project focuses on the quantitative pricing of barrier options—derivative
   A series of tests (using Catch2) ensure that every component—from option pricing to data analysis—functions correctly.
 
 
-
 # Build and Run Instructions
 
 ### Requirements
@@ -134,12 +133,11 @@ If you prefer to run a specific test on its own, execute its binary directly fro
 ```
 
 
+## UML Diagram
+Below is a concise graphcial overview of our project only including our *key* classes:
+![image](https://github.com/user-attachments/assets/188d73a1-2efa-4cbe-b729-f3b69aba539b)
 
 
-## Final Thoughts
-This project demonstrates a robust implementation of Monte Carlo methods for barrier option pricing. Its modular design not only facilitates comprehensive analysis but also makes it straightforward to extend or integrate new simulation techniques in the future.
-
-For more details or to contribute, please refer to the project documentation or contact the maintainers.
 
 ---
 
