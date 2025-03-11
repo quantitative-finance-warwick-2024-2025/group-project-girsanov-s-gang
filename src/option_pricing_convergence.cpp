@@ -43,12 +43,20 @@ namespace option_pricing {
 
 int main() {
     // Option parameters
-    const double S0 = 100.0;
-    const double strike = 100.0;
-    const double barrier = 105.0;
-    const double expiry = 1.0;
-    const double riskFreeRate = 0.05;
-    const double volatility = 0.20;
+    //const double S0 = 100.0;
+    //const double strike = 100.0;
+    //const double barrier = 105.0;
+    //const double expiry = 1.0;
+    //const double riskFreeRate = 0.05;
+    //const double volatility = 0.20;
+
+    const double S0 = 100.0;     // Underlying asset price
+    const double strike = 105.0;       // Strike price
+    const double riskFreeRate = 0.05;       // Annual risk-free rate
+    const double volatility = 0.2;    // Annualized volatility
+    const double expiry = 1.0;        // Time to maturity (years)
+    const double barrier = 110.0;       // Knock-out barrier level
+   // const unsigned simulations = 100000;  // Base simulation count
 
     // Print CSV header
     std::cout << "sims,naive,antithetic,control_variates,importance_sampling\n";

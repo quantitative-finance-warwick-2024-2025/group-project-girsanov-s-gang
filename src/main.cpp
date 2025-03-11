@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
         K, T, 
         Option::Type::Call,
         BarrierOption::BarrierType::KnockOut,
-        B
+        B 
     );
 
     // Generate analysis results
