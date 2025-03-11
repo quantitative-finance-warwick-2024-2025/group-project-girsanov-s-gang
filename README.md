@@ -36,7 +36,7 @@ This project focuses on the quantitative pricing of barrier options—derivative
 
 ### 4. Testing Framework
 - **Automated Unit Tests:**  
-  A series of tests (using Catch2) ensure that every component—from option pricing to data analysis—functions correctly.
+  A series of tests (using Catch2) ensure that every component, from option pricing to data analysis, functions correctly.
 
 
 # Build and Run Instructions

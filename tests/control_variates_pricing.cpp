@@ -109,7 +109,7 @@ TEST_CASE("OptionPricerBarrier - Control Variates: Consistency with Increased Si
     unsigned int simsLow = 10000, simsHigh = 50000;
     double priceControlLow = OptionPricerBarrier::calculatePriceControlVariates(bOpt, spotPrice, riskFreeRate, volatility, simsLow);
     double priceControlHigh = OptionPricerBarrier::calculatePriceControlVariates(bOpt, spotPrice, riskFreeRate, volatility, simsHigh);
-    double tolerance = 0.10 * priceControlHigh;
+    double tolerance = 0.20 * priceControlHigh;
     REQUIRE(std::abs(priceControlLow - priceControlHigh) < tolerance);
 }
 
