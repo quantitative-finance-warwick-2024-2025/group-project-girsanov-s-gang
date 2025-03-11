@@ -12,7 +12,7 @@ double OptionPricerBarrier::normalCDF(double x) {
 // Generate single Monte Carlo path with optional drift adjustment
 void OptionPricerBarrier::generatePath(const BarrierOption& option, double S0, double r, double sigma,
                                       PathResult& result, double driftAdjust) {
-    static std::mt19937 gen(42);
+    static std::mt19937 gen(42); // this is why we get the nearly identical output.csv
     std::normal_distribution<> d(0,1);
     
     const double T = option.getExpiry();
