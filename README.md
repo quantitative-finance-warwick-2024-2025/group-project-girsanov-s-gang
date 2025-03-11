@@ -45,6 +45,7 @@ This project focuses on the quantitative pricing of barrier options—derivative
 - C++ compiler supporting C++17 or newer
 - CMake (v3.14+)
 - (Optional) Catch2 framework for running unit tests
+- Clang (v10.0+)
 
 ### Compilation Steps
 
