@@ -45,14 +45,14 @@ void ToleranceWriter::write(const std::string& filename) {
     std::ofstream out(filename);
     out << "Method,Simulations,Price,Error\n";
     
-    const std::vector<std::tuple<std::string, int, std::function<double(int)>> > methods = {  // 修正模板闭合
+    const std::vector<std::tuple<std::string, int, std::function<double(int)>> > methods = { 
         {"Naive", baseSimulations_, [&](int sims) { return OptionPricerBarrier::calculatePriceNaive(option_, spot_, r_, sigma_, sims); }},
         {"Antithetic", baseSimulations_/2, [&](int sims) { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot_, r_, sigma_, sims); }},
         {"ImportanceSampling", baseSimulations_/2, [&](int sims) { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot_, r_, sigma_, sims); }},
         {"ControlVariates", baseSimulations_, [&](int sims) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma_, sims); }}
     };
     
-    for (const auto& [name, method_base, calcPrice] : methods) {  // 结构化绑定修正
+    for (const auto& [name, method_base, calcPrice] : methods) { 
         double base_price = calcPrice(method_base);
         for (int sims = method_base/10; sims <= method_base; sims += method_base/10) {
             double price = calcPrice(sims);
@@ -76,7 +76,7 @@ void OptionPriceVolatilityWriter::write(const std::string& filename) {
     std::ofstream out(filename);
     out << "Method,Volatility,Price\n";
     
-    const std::vector<std::pair<std::string, std::function<double(double)>> > methods = {  // 修正模板闭合
+    const std::vector<std::pair<std::string, std::function<double(double)>> > methods = {
         {"Naive", [&](double sigma) { return OptionPricerBarrier::calculatePriceNaive(option_, spot_, r_, sigma, simulations_); }},
         {"Antithetic", [&](double sigma) { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot_, r_, sigma, simulations_/2); }},
         {"ImportanceSampling", [&](double sigma) { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot_, r_, sigma, simulations_/2); }},
@@ -103,7 +103,7 @@ void EfficiencyWriter::write(const std::string& filename) {
     std::ofstream out(filename);
     out << "Method,Price,Time(ms)\n";
     
-    const std::vector<std::tuple<std::string, int, std::function<double()>> > methods = {  // 修正模板闭合
+    const std::vector<std::tuple<std::string, int, std::function<double()>> > methods = { 
         {"Naive", simulations_, [&]() { return OptionPricerBarrier::calculatePriceNaive(option_, spot_, r_, sigma_, simulations_); }},
         {"Antithetic", simulations_/2, [&]() { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot_, r_, sigma_, simulations_/2); }},
         {"ImportanceSampling", simulations_/2, [&]() { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot_, r_, sigma_, simulations_/2); }},
@@ -132,7 +132,7 @@ void SpotOptionWriter::write(const std::string& filename) {
     std::ofstream out(filename);
     out << "Method,SpotPrice,OptionPrice\n";
     
-    const std::vector<std::pair<std::string, std::function<double(double)>> > methods = {  // 修正模板闭合
+    const std::vector<std::pair<std::string, std::function<double(double)>> > methods = { 
         {"Naive", [&](double spot) { return OptionPricerBarrier::calculatePriceNaive(option_, spot, r_, sigma_, simulations_); }},
         {"Antithetic", [&](double spot) { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot, r_, sigma_, simulations_/2); }},
         {"ImportanceSampling", [&](double spot) { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot, r_, sigma_, simulations_/2); }},
