@@ -5,24 +5,27 @@
 #include "BarrierOption.hpp"
 #include "AnalysisWriter.hpp"
 
-int main() {
-    // Core parameters
-    const double S0 = 100.0;
-    const double K = 105.0;
-    const double r = 0.05;
-    const double sigma = 0.2;
-    const double T = 1.0;
-    const double B = 110.0;
-    const int simulations = 100000;
-    const std::string output_dir = "results";
+int main(int argc, char* argv[]) {
+    // ================= Core Pricing Parameters =================
+    const double S0 = 100.0;     // Underlying asset price
+    const double K = 105.0;       // Strike price
+    const double r = 0.05;       // Annual risk-free rate
+    const double sigma = 0.2;    // Annualized volatility
+    const double T = 1.0;        // Time to maturity (years)
+    const double B = 110.0;       // Knock-out barrier level
+    const unsigned simulations = 100000;  // Base simulation count
 
-    // Create output directory
+    // ================= Output Directory Setup (Fixed) =================
+    std::filesystem::path exe_path = std::filesystem::absolute(argv[0]).parent_path(); // changed it so the output folder is relative to our main folder by find its path
+    const std::filesystem::path output_dir = exe_path / "results";
     try {
-        std::filesystem::create_directories(output_dir);
-        std::cout << "[SUCCESS] Directory created successfully: " 
-                  << std::filesystem::absolute(output_dir) << "\n";
-    } catch (...) {
-        std::cerr << "[ERROR] Failed to create directory\n";
+        if (!std::filesystem::exists(output_dir)) {
+            std::filesystem::create_directories(output_dir);
+            std::cout << "[SUCCESS] Created directory: " 
+                      << output_dir << "\n";
+        }
+    } catch (const std::filesystem::filesystem_error& e) {
+        std::cerr << "[ERROR] Directory creation failed: " << e.what() << "\n";
         return 1;
     }
 
