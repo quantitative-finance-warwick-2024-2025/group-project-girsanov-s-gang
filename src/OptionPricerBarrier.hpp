@@ -29,12 +29,13 @@ private:
 
     // Core path generation method
     static void generatePath(const BarrierOption& option, double S0, double r, double sigma,
-                            PathResult& result, double driftAdjust = 0.0, unsigned timeSteps = 100);
+                            PathResult& result, double driftAdjust = 0.0);
     
     // Helper methods
     static double blackScholesPrice(double S, double K, double T, 
                                    double r, double sigma, Option::Type type);
     static double normalCDF(double x);
+    static double inverseNormalCDF(double u);
 };
 
 #endif
