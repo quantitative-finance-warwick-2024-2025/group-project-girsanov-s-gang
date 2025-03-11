@@ -3,23 +3,7 @@
 #include <memory>
 #include <filesystem>
 #include "BarrierOption.hpp"
-#include "OptionPricerBarrier.hpp"
 #include "AnalysisWriter.hpp"
-#include "PricingEngineBarrier.hpp"
-
-class OptionPricerAdapter : public PricingEngineBarrier {
-public:
-    double priceOption(double spot, double r, double sigma, int simulations) override {
-        // Create a standard knock-out call option for analysis
-        BarrierOption option(105.0, 1.0, 
-                            Option::Type::Call, 
-                            BarrierOption::BarrierType::KnockOut, 
-                            110.0);
-        
-        return OptionPricerBarrier::calculatePriceControlVariates(
-            option, spot, r, sigma, simulations);
-    }
-};
 
 int main(int argc, char* argv[]) {
     // ================= Core Pricing Parameters =================
@@ -45,70 +29,38 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // ================= Initialize Barrier Option =================
+    // Initialize barrier option
     BarrierOption knockOutCall(
-        K,          // Strike price
-        T,          // Expiry
-        Option::Type::Call, 
-        BarrierOption::BarrierType::KnockOut, 
-        B           // Barrier level
+        K, T, 
+        Option::Type::Call,
+        BarrierOption::BarrierType::KnockOut,
+        B
     );
 
-    // ================= Pricing Method Comparison =================
-    std::cout << "\n=== Pricing Method Results ===\n";
-    std::cout << "Naive Monte Carlo: " 
-              << OptionPricerBarrier::calculatePriceNaive(
-                    knockOutCall, S0, r, sigma, simulations)
-              << std::endl;
-
-    std::cout << "Antithetic Variates: " 
-              << OptionPricerBarrier::calculatePriceAntithetic(
-                    knockOutCall, S0, r, sigma, simulations/2)
-              << std::endl;
-
-    std::cout << "Importance Sampling: " 
-              << OptionPricerBarrier::calculatePriceImportanceSampling(
-                    knockOutCall, S0, r, sigma, simulations/2)
-              << std::endl;
-
-    std::cout << "Control Variates: " 
-              << OptionPricerBarrier::calculatePriceControlVariates(
-                    knockOutCall, S0, r, sigma, simulations)
-              << std::endl;
-
-    OptionPricerAdapter adapter;  // Pricing engine adapter
-    
-    // Standard path object for output
+    // Generate analysis results
     const std::filesystem::path results_path(output_dir);
 
-    // 1. Convergence Analysis
-    ConvergenceWriter conv_writer(adapter, S0, r, sigma, {1000, 5000, 10000, 50000, 100000});
-    conv_writer.write((results_path / "convergence_analysis.csv").string());
-    std::cout << "\n[STATUS] Convergence analysis saved\n";
+    // 1. Convergence analysis
+    ConvergenceWriter(knockOutCall, S0, r, sigma, {1000, 5000, 10000, 50000, 100000})
+        .write((results_path / "convergence_analysis.csv").string());
 
-    // 2. Volatility Sensitivity Analysis
-    OptionPriceVolatilityWriter vol_writer(adapter, S0, r, {0.1, 0.15, 0.2, 0.25, 0.3}, simulations);
-    vol_writer.write((results_path / "volatility_sensitivity.csv").string());
-    std::cout << "[STATUS] Volatility sensitivity analysis saved\n";
+    // 2. Volatility sensitivity analysis
+    OptionPriceVolatilityWriter(knockOutCall, S0, r, {0.1, 0.15, 0.2, 0.25, 0.3}, simulations)
+        .write((results_path / "volatility_sensitivity.csv").string());
 
-    // 3. Spot Price Sensitivity Analysis
-    SpotOptionWriter spot_writer(adapter, {80, 90, 100, 110, 120}, r, sigma, simulations);
-    spot_writer.write((results_path / "spot_price_sensitivity.csv").string());
-    std::cout << "[STATUS] Spot price analysis saved\n";
+    // 3. Underlying price sensitivity analysis
+    SpotOptionWriter(knockOutCall, {80, 90, 100, 110, 120}, r, sigma, simulations)
+        .write((results_path / "spot_price_sensitivity.csv").string());
 
-    // 4. Error Tolerance Analysis
-    ToleranceWriter tol_writer(adapter, S0, r, sigma, 
-                             100000,  // Base simulations
-                             0.001);  // Tolerance threshold
-    tol_writer.write((results_path / "error_tolerance.csv").string());
-    std::cout << "[STATUS] Error tolerance analysis saved\n";
+    // 4. Error tolerance analysis
+    ToleranceWriter(knockOutCall, S0, r, sigma, 100000, 0.001)
+        .write((results_path / "error_tolerance.csv").string());
 
-    // 5. Pricing Efficiency Comparison
-    EfficiencyWriter eff_writer(adapter, S0, r, sigma, simulations);
-    eff_writer.write((results_path / "method_efficiency.csv").string());
-    std::cout << "[STATUS] Efficiency comparison analysis saved\n";
+    // 5. Efficiency comparison analysis
+    EfficiencyWriter(knockOutCall, S0, r, sigma, simulations)
+        .write((results_path / "method_efficiency.csv").string());
 
-    std::cout << "\n=== All analysis outputs saved to: " 
+    std::cout << "\n=== All analysis results saved to: " 
               << std::filesystem::absolute(results_path) << " ===\n";
     
     return 0;

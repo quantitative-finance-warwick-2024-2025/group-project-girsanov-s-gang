@@ -1,0 +1,5 @@
+Method,Price,Time(ms)
+Naive,0.0235494,968
+Antithetic,0.0219414,966
+ImportanceSampling,0.0238667,522
+ControlVariates,0.0226533,993
