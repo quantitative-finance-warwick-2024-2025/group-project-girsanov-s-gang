@@ -6,38 +6,40 @@
 
 namespace option_pricing {
 
-void print_convergence_barrier_option(
-    const double S0,
-    const double riskFreeRate,
-    const double volatility,
-    const double strike,
-    const double barrier,
-    const double expiry,
-    const unsigned int sims)
-{
-    // Create a knock-out call barrier option
-    BarrierOption bOpt(
-        strike,      // strike
-        expiry,      // expiry
-        Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut,
-        barrier      // barrier level
-    );
-
-    // Calculate the option prices using three different methods.
-    double priceNaive = OptionPricerBarrier::calculatePriceNaive(bOpt, S0, riskFreeRate, volatility, sims);
-    double priceAntithetic = OptionPricerBarrier::calculatePriceAntithetic(bOpt, S0, riskFreeRate, volatility, sims);
-    double priceControl = OptionPricerBarrier::calculatePriceControlVariates(bOpt, S0, riskFreeRate, volatility, sims);
-
-    // Output the simulation count and computed prices in CSV format.
-    std::cout << sims << ","
-              << std::fixed << std::setprecision(6)
-              << priceNaive << ","
-              << priceAntithetic << ","
-              << priceControl << "\n";
-}
-
-} // namespace option_pricing
+    void print_convergence_barrier_option(
+        const double S0,
+        const double riskFreeRate,
+        const double volatility,
+        const double strike,
+        const double barrier,
+        const double expiry,
+        const unsigned int sims)
+    {
+        // Create a knock-out call barrier option
+        BarrierOption bOpt(
+            strike,      // strike
+            expiry,      // expiry
+            Option::Type::Call,
+            BarrierOption::BarrierType::KnockOut,
+            barrier      // barrier level
+        );
+    
+        // Calculate the option prices using four different methods.
+        double priceNaive = OptionPricerBarrier::calculatePriceNaive(bOpt, S0, riskFreeRate, volatility, sims);
+        double priceAntithetic = OptionPricerBarrier::calculatePriceAntithetic(bOpt, S0, riskFreeRate, volatility, sims);
+        double priceControl = OptionPricerBarrier::calculatePriceControlVariates(bOpt, S0, riskFreeRate, volatility, sims);
+        double priceImportance = OptionPricerBarrier::calculatePriceImportanceSampling(bOpt, S0, riskFreeRate, volatility, sims);
+    
+        // Output the simulation count and computed prices in CSV format.
+        std::cout << sims << ","
+                  << std::fixed << std::setprecision(6)
+                  << priceNaive << ","
+                  << priceAntithetic << ","
+                  << priceControl << ","
+                  << priceImportance << "\n";
+    }
+    
+    }
 
 int main() {
     // Option parameters
@@ -49,7 +51,7 @@ int main() {
     const double volatility = 0.20;
 
     // Print CSV header
-    std::cout << "sims,naive,antithetic,control_variates\n";
+    std::cout << "sims,naive,antithetic,control_variates,importance_sampling\n";
 
     // Define a series of simulation counts to study convergence
     std::vector<unsigned int> simulationCounts = {100, 1000, 5000, 10000, 50000, 100000};
