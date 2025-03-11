@@ -15,6 +15,7 @@ add_executable(Girsanov_gang_proj
     src/BarrierOption.cpp
     src/OptionPricerBarrier.cpp
     src/AnalysisWriter.cpp
+    src/OptionPricerBarrierStratified.cpp
 )
 
 # Expose project root directory to source code so it can find the files
@@ -26,6 +27,7 @@ add_library(ib9jho_library
     src/BarrierOption.cpp
     src/OptionPricerBarrier.cpp
     src/AnalysisWriter.cpp
+    src/OptionPricerBarrierStratified.cpp
 )
 target_include_directories(ib9jho_library PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

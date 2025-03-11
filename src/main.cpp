@@ -4,6 +4,8 @@
 #include <filesystem>
 #include "BarrierOption.hpp"
 #include "AnalysisWriter.hpp"
+#include "OptionPricerBarrierStratified.hpp" 
+
 
 int main(int argc, char* argv[]) {
     // ================= Core Pricing Parameters =================
@@ -13,6 +15,7 @@ int main(int argc, char* argv[]) {
     const double sigma = 0.2;    // Annualized volatility
     const double T = 1.0;        // Time to maturity (years)
     const double B = 110.0;       // Knock-out barrier level
+    const double b = 0.1;
     const unsigned simulations = 100000;  // Base simulation count
 
     // ================= Output Directory Setup (Fixed) =================
@@ -34,7 +37,7 @@ int main(int argc, char* argv[]) {
         K, T, 
         Option::Type::Call,
         BarrierOption::BarrierType::KnockOut,
-        B 
+        B+b
     );
 
     // Generate analysis results

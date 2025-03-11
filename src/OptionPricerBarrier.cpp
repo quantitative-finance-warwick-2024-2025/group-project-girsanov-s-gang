@@ -3,6 +3,7 @@
 #include <random>
 #include <algorithm>
 #include <numeric>
+#include <string>
 
 // Standard normal cumulative distribution function
 double OptionPricerBarrier::normalCDF(double x) {
@@ -11,20 +12,18 @@ double OptionPricerBarrier::normalCDF(double x) {
 
 // Generate single Monte Carlo path with optional drift adjustment
 void OptionPricerBarrier::generatePath(const BarrierOption& option, double S0, double r, double sigma,
-                                      PathResult& result, double driftAdjust) {
-    static std::mt19937 gen(42);
+                                      PathResult& result, double driftAdjust, unsigned timeSteps) {
+    thread_local static std::mt19937 gen(std::random_device{}());
     std::normal_distribution<> d(0,1);
     
     const double T = option.getExpiry();
-    const unsigned timeSteps = 252;  // Daily simulation (252 trading days/year)
     const double dt = T / timeSteps;
-    const bool trackMax = option.isUpBarrier();  // Track maximum for up barriers
+    const bool trackMax = option.isUpBarrier();
     
     double currentPrice = S0;
     result.pathExtreme = S0;
-    result.weight = 1.0;  // Initial importance sampling weight
-    
-    // Adjust drift rate for importance sampling
+    result.weight = 1.0;
+
     const double adjustedDrift = (r + driftAdjust - 0.5*sigma*sigma) * dt;
     const double vol = sigma * std::sqrt(dt);
 
@@ -32,12 +31,13 @@ void OptionPricerBarrier::generatePath(const BarrierOption& option, double S0, d
         double z = d(gen);
         currentPrice *= std::exp(adjustedDrift + vol * z);
         
-        // Track path extremes for barrier check
+        // Price floor protection
+        if (currentPrice < 1e-8) currentPrice = 1e-8;
+
         trackMax ? 
             result.pathExtreme = std::max(result.pathExtreme, currentPrice) :
             result.pathExtreme = std::min(result.pathExtreme, currentPrice);
         
-        // Update importance sampling weight
         if (driftAdjust != 0.0) {
             result.weight *= std::exp(-driftAdjust*z*dt - 0.5*driftAdjust*driftAdjust*dt);
         }
@@ -58,75 +58,194 @@ double OptionPricerBarrier::blackScholesPrice(double S, double K, double T,
 // Basic Monte Carlo pricing
 double OptionPricerBarrier::calculatePriceNaive(const BarrierOption& option, double S0,
                                                double r, double sigma, unsigned numSimulations) {
-    double total = 0.0;
+    if (numSimulations == 0) throw std::invalid_argument("Simulation count must be positive");
+    
+    const double T = option.getExpiry();
+    double totalPayoff = 0.0;
+    unsigned validPaths = 0;
+
     for (unsigned i = 0; i < numSimulations; ++i) {
-        PathResult result;
-        generatePath(option, S0, r, sigma, result);
-        total += option.calculatePayoffWithExtremes(result.finalPrice, result.pathExtreme);
+        PathResult path;
+        generatePath(option, S0, r, sigma, path); 
+        
+        if (std::isnan(path.finalPrice) || path.finalPrice <= 0.0) continue;
+        
+        totalPayoff += option.calculatePayoffWithExtremes(path.finalPrice, path.pathExtreme);
+        validPaths++;
     }
-    return std::exp(-r * option.getExpiry()) * total / numSimulations;
+
+    return validPaths == 0 ? 0.0 : std::exp(-r * T) * (totalPayoff / validPaths);
 }
 
-// Antithetic variates variance reduction
+
+// Antithetic variates
 double OptionPricerBarrier::calculatePriceAntithetic(const BarrierOption& option, double S0,
-                                                    double r, double sigma, unsigned numSimulations) {
-    double total = 0.0;
+                                                   double r, double sigma, unsigned numSimulations)
+{
+    if (numSimulations == 0) {
+        throw std::invalid_argument("Number of simulations cannot be zero");
+    }
+
+    const BarrierOption* barrierOpt = dynamic_cast<const BarrierOption*>(&option);
+    if (!barrierOpt) {
+        return 0.0;
+    }
+
+    // Parameter initialization
+    const unsigned int steps = 100;
+    const double expiry = barrierOpt->getExpiry();
+    const double dt = expiry / steps;
+    const double drift = (r - 0.5 * sigma * sigma) * dt;
+    const double diffusion = sigma * std::sqrt(dt);
+
+    // Random number generator
+    static std::mt19937 gen(std::random_device{}());
+    std::normal_distribution<double> dist(0.0, 1.0);
+
+    // Lambda for barrier checking
+    const auto checkBarrier = [&](double price, bool& triggered) {
+        if (barrierOpt->isUpBarrier()) {
+            if (price >= barrierOpt->getBarrierLevel()) triggered = true;
+        } else {
+            if (price <= barrierOpt->getBarrierLevel()) triggered = true;
+        }
+    };
+
+    // Main simulation loop
+    double sumPayoffs = 0.0;
     for (unsigned i = 0; i < numSimulations; ++i) {
-        PathResult p1, p2;
-        generatePath(option, S0, r, sigma, p1);
-        generatePath(option, S0, r, sigma, p2);
-        total += 0.5 * (
-            option.calculatePayoffWithExtremes(p1.finalPrice, p1.pathExtreme) +
-            option.calculatePayoffWithExtremes(p2.finalPrice, p2.pathExtreme)
+        bool triggeredA = false, triggeredB = false;
+        double pathA = S0, pathB = S0;  
+
+        for (unsigned j = 0; j < steps; ++j) {
+            const double Z = dist(gen);
+            
+            // Path A (+Z)
+            pathA *= std::exp(drift + diffusion * Z);
+            checkBarrier(pathA, triggeredA);
+
+            // Path B (-Z)
+            pathB *= std::exp(drift + diffusion * (-Z));
+            checkBarrier(pathB, triggeredB);
+        }
+
+        sumPayoffs += 0.5 * (
+            barrierOpt->payoff(pathA, triggeredA) + 
+            barrierOpt->payoff(pathB, triggeredB)
         );
     }
-    return std::exp(-r * option.getExpiry()) * total / numSimulations;
+
+    return std::exp(-r * expiry) * (sumPayoffs / numSimulations);
 }
 
-// Importance sampling for barrier hitting probability
+// Importance sampling 
 double OptionPricerBarrier::calculatePriceImportanceSampling(const BarrierOption& option, double S0,
-                                                            double r, double sigma, unsigned numSimulations) {
-    const double driftAdjust = option.isUpBarrier() ? 0.5*sigma : -0.5*sigma;
-    double total = 0.0;
-    
-    for (unsigned i = 0; i < numSimulations; ++i) {
-        PathResult result;
-        generatePath(option, S0, r, sigma, result, driftAdjust);
-        total += result.weight * option.calculatePayoffWithExtremes(result.finalPrice, result.pathExtreme);
+                                                           double r, double sigma, unsigned numSimulations)
+{
+    if (numSimulations == 0) {
+        throw std::invalid_argument("Number of simulations cannot be zero");
     }
-    return std::exp(-r * option.getExpiry()) * total / numSimulations;
+
+    const BarrierOption* barrierOpt = dynamic_cast<const BarrierOption*>(&option);
+    if (!barrierOpt) {
+        return 0.0;
+    }
+
+    // Parameter initialization
+    const unsigned steps = 100;
+    const double expiry = barrierOpt->getExpiry();
+    const double dt = expiry / steps;
+    const double mu = r - 0.5 * sigma * sigma;
+
+    // Importance sampling parameters
+    const double driftAdjust = barrierOpt->isUpBarrier() ? 1.5 * sigma : -1.5 * sigma;
+    const double adjustedDrift = (mu + driftAdjust) * dt;
+    const double diffusion = sigma * std::sqrt(dt);
+
+    // Random number generator
+    static std::mt19937 gen(std::random_device{}());
+    std::normal_distribution<double> dist(0.0, 1.0);
+
+    // Main simulation loop
+    double sumPayoffs = 0.0;
+    for (unsigned i = 0; i < numSimulations; ++i) {
+        bool triggered = false;
+        double path = S0; 
+        double weight = 1.0;
+
+        for (unsigned j = 0; j < steps; ++j) {
+            const double Z = dist(gen);
+            
+            // Apply adjusted drift
+            path *= std::exp(adjustedDrift + diffusion * Z);
+            
+            // Update importance sampling weight
+            weight *= std::exp(-driftAdjust * Z * dt - 0.5 * driftAdjust * driftAdjust * dt * dt);
+
+            // Barrier check
+            if (barrierOpt->isUpBarrier()) {
+                if (path >= barrierOpt->getBarrierLevel()) triggered = true;
+            } else {
+                if (path <= barrierOpt->getBarrierLevel()) triggered = true;
+            }
+        }
+
+        sumPayoffs += weight * barrierOpt->payoff(path, triggered);
+    }
+
+    return std::exp(-r * expiry) * (sumPayoffs / numSimulations);
 }
 
-// Control variate method using vanilla option price
+// Control variate method
 double OptionPricerBarrier::calculatePriceControlVariates(const BarrierOption& option, double S0,
-                                                          double r, double sigma, unsigned numSimulations) {
+                                                         double r, double sigma, unsigned numSimulations) 
+{
+    if (numSimulations < 100) throw std::invalid_argument("Minimum 100 simulations required");
+    
     const double T = option.getExpiry();
     const double bsPrice = blackScholesPrice(S0, option.getStrike(), T, r, sigma, option.getType());
     
-    std::vector<double> barrierPayoffs(numSimulations), vanillaPayoffs(numSimulations);
+    std::vector<double> barrierPayoffs;
+    std::vector<double> vanillaPayoffs;
+
     
-    // Generate paired payoffs
+    unsigned validPaths = 0;
+    
     for (unsigned i = 0; i < numSimulations; ++i) {
-        PathResult result;
-        generatePath(option, S0, r, sigma, result);
-        barrierPayoffs[i] = option.calculatePayoffWithExtremes(result.finalPrice, result.pathExtreme);
-        vanillaPayoffs[i] = option.payoff(result.finalPrice);
+        PathResult path;
+        generatePath(option, S0, r, sigma, path, 0.0, 100);  
+        
+        
+        if (std::isnan(path.finalPrice) || path.finalPrice <= 0.0) {
+            continue;
+        }
+        
+        barrierPayoffs.push_back(option.calculatePayoffWithExtremes(path.finalPrice, path.pathExtreme));
+        vanillaPayoffs.push_back(option.payoff(path.finalPrice));
+        validPaths++;
     }
+
     
-    // Calculate control variate parameters
-    const double meanBarrier = std::accumulate(barrierPayoffs.begin(), barrierPayoffs.end(), 0.0) / numSimulations;
-    const double meanVanilla = std::accumulate(vanillaPayoffs.begin(), vanillaPayoffs.end(), 0.0) / numSimulations;
+    if (validPaths == 0) return 0.0;
     
-    // Compute covariance and variance
+   
+    const auto [meanBarrier, meanVanilla] = [&]() {
+        double sumB = 0.0, sumV = 0.0;
+        for (const auto& val : barrierPayoffs) sumB += val;
+        for (const auto& val : vanillaPayoffs) sumV += val;
+        return std::make_pair(sumB / validPaths, sumV / validPaths);
+    }();
+
+    
     double cov = 0.0, varVanilla = 0.0;
-    for (unsigned i = 0; i < numSimulations; ++i) {
-        cov += (barrierPayoffs[i] - meanBarrier) * (vanillaPayoffs[i] - meanVanilla);
-        varVanilla += std::pow(vanillaPayoffs[i] - meanVanilla, 2);
+    for (size_t i = 0; i < validPaths; ++i) {
+        const double diffB = barrierPayoffs[i] - meanBarrier;
+        const double diffV = vanillaPayoffs[i] - meanVanilla;
+        cov += diffB * diffV;
+        varVanilla += diffV * diffV;
     }
-    const double epsilon = 1e-8;
-    const double beta = (std::abs(varVanilla) < epsilon) ? 0.0 : cov / varVanilla;
     
-    
-    // Adjusted price with control variate
-    return std::exp(-r*T) * (meanBarrier - beta*(meanVanilla - bsPrice));
+    const double beta = (varVanilla > 1e-12) ? cov / varVanilla : 0.0;
+
+    return std::exp(-r * T) * (meanBarrier - beta * (meanVanilla - bsPrice));
 }

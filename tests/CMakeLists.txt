@@ -86,4 +86,18 @@ target_include_directories(importance_sampling_pricing PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/extern/catch2
 )
+
 add_test(NAME importance_sampling_pricing COMMAND importance_sampling_pricing)
+
+add_executable(stratified_sampling_pricing
+    stratified_sampling_pricing.cpp
+    ../src/Option.cpp
+    ../src/BarrierOption.cpp
+    ../src/OptionPricerBarrierStratified.cpp
+    ../src/OptionPricerBarrier.cpp
+)
+target_include_directories(stratified_sampling_pricing PRIVATE
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/extern/catch2
+)
+add_test(NAME stratified_sampling_pricing COMMAND stratified_sampling_pricing)

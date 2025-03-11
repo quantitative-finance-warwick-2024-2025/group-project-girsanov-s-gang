@@ -1,5 +1,6 @@
 #include "AnalysisWriter.hpp"
 #include "OptionPricerBarrier.hpp"
+#include "OptionPricerBarrierStratified.hpp"
 #include <functional> 
 #include <fstream>
 #include <chrono>
@@ -27,6 +28,8 @@ void ConvergenceWriter::write(const std::string& filename) {
             << OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot_, r_, sigma_, steps/2) << "\n";
         out << "ControlVariates," << steps << "," 
             << OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma_, steps) << "\n";
+        out << "Stratified," << steps << ","
+            << OptionPricerBarrierStratified::calculatePriceBarrierStratified(option_, spot_, r_, sigma_, steps) << "\n";
     }
 }
 
@@ -49,7 +52,8 @@ void ToleranceWriter::write(const std::string& filename) {
         {"Naive", baseSimulations_, [&](int sims) { return OptionPricerBarrier::calculatePriceNaive(option_, spot_, r_, sigma_, sims); }},
         {"Antithetic", baseSimulations_/2, [&](int sims) { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot_, r_, sigma_, sims); }},
         {"ImportanceSampling", baseSimulations_/2, [&](int sims) { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot_, r_, sigma_, sims); }},
-        {"ControlVariates", baseSimulations_, [&](int sims) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma_, sims); }}
+        {"ControlVariates", baseSimulations_, [&](int sims) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma_, sims); }},
+        {"Stratified", baseSimulations_, [&](int sims) { return OptionPricerBarrierStratified::calculatePriceBarrierStratified(option_, spot_, r_, sigma_, sims); }}
     };
     
     for (const auto& [name, method_base, calcPrice] : methods) { 
@@ -80,7 +84,8 @@ void OptionPriceVolatilityWriter::write(const std::string& filename) {
         {"Naive", [&](double sigma) { return OptionPricerBarrier::calculatePriceNaive(option_, spot_, r_, sigma, simulations_); }},
         {"Antithetic", [&](double sigma) { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot_, r_, sigma, simulations_/2); }},
         {"ImportanceSampling", [&](double sigma) { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot_, r_, sigma, simulations_/2); }},
-        {"ControlVariates", [&](double sigma) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma, simulations_); }}
+        {"ControlVariates", [&](double sigma) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma, simulations_); }},
+        {"Stratified", [&](double sigma) { return OptionPricerBarrierStratified::calculatePriceBarrierStratified(option_, spot_, r_, sigma, simulations_); }}
     };
     
     for (const auto& [name, calcPrice] : methods) {
@@ -107,7 +112,8 @@ void EfficiencyWriter::write(const std::string& filename) {
         {"Naive", simulations_, [&]() { return OptionPricerBarrier::calculatePriceNaive(option_, spot_, r_, sigma_, simulations_); }},
         {"Antithetic", simulations_/2, [&]() { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot_, r_, sigma_, simulations_/2); }},
         {"ImportanceSampling", simulations_/2, [&]() { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot_, r_, sigma_, simulations_/2); }},
-        {"ControlVariates", simulations_, [&]() { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma_, simulations_); }}
+        {"ControlVariates", simulations_, [&]() { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma_, simulations_); }},
+        {"Stratified", simulations_, [&]() { return OptionPricerBarrierStratified::calculatePriceBarrierStratified(option_, spot_, r_, sigma_, simulations_); }}
     };
     
     for (const auto& [name, sims, pricingFn] : methods) {
@@ -136,7 +142,8 @@ void SpotOptionWriter::write(const std::string& filename) {
         {"Naive", [&](double spot) { return OptionPricerBarrier::calculatePriceNaive(option_, spot, r_, sigma_, simulations_); }},
         {"Antithetic", [&](double spot) { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot, r_, sigma_, simulations_/2); }},
         {"ImportanceSampling", [&](double spot) { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot, r_, sigma_, simulations_/2); }},
-        {"ControlVariates", [&](double spot) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot, r_, sigma_, simulations_); }}
+        {"ControlVariates", [&](double spot) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot, r_, sigma_, simulations_); }},
+        {"Stratified", [&](double spot) { return OptionPricerBarrierStratified::calculatePriceBarrierStratified(option_, spot, r_, sigma_, simulations_); }}
     };
     
     for (const auto& [name, calcPrice] : methods) {

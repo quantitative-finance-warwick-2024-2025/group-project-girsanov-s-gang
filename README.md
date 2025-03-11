@@ -120,6 +120,7 @@ If you prefer to run a specific test on its own, execute its binary directly fro
 ./importance_sampling_pricing
 ./option_tests
 ./barrier_tests
+./stratified_sampling_pricing
 ```
 
 **Windows:**
@@ -130,6 +131,7 @@ If you prefer to run a specific test on its own, execute its binary directly fro
 .\importance_sampling_pricing.exe
 .\option_tests.exe
 .\barrier_tests.exe
+.\stratified_sampling_pricing.exe
 ```
 
 
