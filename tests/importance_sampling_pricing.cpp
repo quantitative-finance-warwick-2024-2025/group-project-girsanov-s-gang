@@ -90,8 +90,8 @@ TEST_CASE("OptionPricerBarrier - Importance Sampling: Deep In-The-Money Knock-Ou
     double priceImportance = OptionPricerBarrier::calculatePriceImportanceSampling(bOpt, spotPrice, riskFreeRate, volatility, sims);
     double priceNaive      = OptionPricerBarrier::calculatePriceNaive(bOpt, spotPrice, riskFreeRate, volatility, sims);
     REQUIRE(priceImportance >= 0.0);
-    // Use 20% tolerance for this scenario.
-    double tolerance = 0.20 * priceNaive;
+    // Use 15% tolerance for this scenario.
+    double tolerance = 0.15 * priceNaive;
     REQUIRE(std::abs(priceImportance - priceNaive) < tolerance);
 }
 
@@ -106,7 +106,7 @@ TEST_CASE("OptionPricerBarrier - Importance Sampling: Deep Out-Of-The-Money Knoc
     double priceImportance = OptionPricerBarrier::calculatePriceImportanceSampling(bOpt, spotPrice, riskFreeRate, volatility, sims);
     double priceNaive      = OptionPricerBarrier::calculatePriceNaive(bOpt, spotPrice, riskFreeRate, volatility, sims);
     REQUIRE(priceImportance >= 0.0);
-    // Increase tolerance to 150% of the naive price for this deep out-of-the-money scenario.
+    // Increase tolerance to 150% of the naive price for this deep out-of-the-money scenario as it is more difficult to price.
     double tolerance = 1.50 * priceNaive;
     REQUIRE(std::abs(priceImportance - priceNaive) < tolerance);
 }
@@ -134,8 +134,8 @@ TEST_CASE("OptionPricerBarrier - Importance Sampling: Consistency with Increased
     unsigned int simsHigh = 50000;
     double priceLow = OptionPricerBarrier::calculatePriceImportanceSampling(bOpt, spotPrice, riskFreeRate, volatility, simsLow);
     double priceHigh = OptionPricerBarrier::calculatePriceImportanceSampling(bOpt, spotPrice, riskFreeRate, volatility, simsHigh);
-    // Use 50% tolerance for consistency check.
-    double tolerance = 0.50 * priceHigh;
+    // Use 25% tolerance for consistency check.
+    double tolerance = 0.25 * priceHigh;
     REQUIRE(std::abs(priceLow - priceHigh) < tolerance);
 }
 

@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include <algorithm> // for std::max
+#include <algorithm>
 #include "../src/Option.hpp"
 
 // A derived class just for testing

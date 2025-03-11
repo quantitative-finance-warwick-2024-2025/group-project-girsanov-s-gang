@@ -82,7 +82,6 @@ TEST_CASE_METHOD(BarrierOptionFixture, "BarrierOption - KnockOutPutNotTriggered"
     REQUIRE(payoffVal == 10.0);
 }
 
-// Single-parameter payoff() => barrierTriggered=false
 TEST_CASE_METHOD(BarrierOptionFixture, "BarrierOption - DefaultPayoffKnockInCall", "[BarrierOptionTest]") {
     double payoffVal = knockInCall->payoff(110.0);
     REQUIRE(payoffVal == 0.0);

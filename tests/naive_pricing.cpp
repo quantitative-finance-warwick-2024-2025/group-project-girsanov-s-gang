@@ -52,8 +52,7 @@ TEST_CASE("OptionPricerBarrier - KnockOutPutOTM", "[OptionPricerBarrierTest]") {
 
     double price = OptionPricerBarrier::calculatePriceNaive(bOpt, spotPrice, riskFreeRate, volatility, sims);
 
-    // Even though it's out-of-the-money, the option can have some value
-    // But we at least check it's not negative
+    // Even though it's out-of-the-money, the option can have some value but we at least check it's not negative
     REQUIRE(price >= 0.0);
 }
 
@@ -77,10 +76,7 @@ TEST_CASE("OptionPricerBarrier - KnockInPutATM", "[OptionPricerBarrierTest]") {
 // Low number of simulations
 TEST_CASE("OptionPricerBarrier - Naive Method: Low Simulations", "[OptionPricerBarrierTest]") {
     // Test with very few Monte Carlo paths to check stability
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 105.0
-    );
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 105.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -94,10 +90,7 @@ TEST_CASE("OptionPricerBarrier - Naive Method: Low Simulations", "[OptionPricerB
 TEST_CASE("OptionPricerBarrier - Naive Method: Zero Volatility", "[OptionPricerBarrierTest]") {
     // With zero volatility the underlying remains constant; for a call, the payoff is intrinsic.
     // Here, with spot == strike, payoff is zero.
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 105.0
-    );
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 105.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.0;  // no randomness
@@ -110,10 +103,7 @@ TEST_CASE("OptionPricerBarrier - Naive Method: Zero Volatility", "[OptionPricerB
 // Negative risk-free rate
 TEST_CASE("OptionPricerBarrier - Naive Method: Negative Risk-Free Rate", "[OptionPricerBarrierTest]") {
     // Ensure the pricing function handles negative interest rates gracefully
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 105.0
-    );
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 105.0);
     double spotPrice    = 100.0;
     double riskFreeRate = -0.01; // negative interest rate
     double volatility   = 0.20;
@@ -126,11 +116,7 @@ TEST_CASE("OptionPricerBarrier - Naive Method: Negative Risk-Free Rate", "[Optio
 // At expiry (zero time to maturity)
 TEST_CASE("OptionPricerBarrier - Naive Method: At Expiry", "[OptionPricerBarrierTest]") {
     // Option with expiry set to zero should be priced at its intrinsic value.
-    // For a call with spot == strike, intrinsic value is 0.
-    BarrierOption bOpt(
-        100.0, 0.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 105.0
-    );
+    BarrierOption bOpt(100.0, 0.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 105.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -142,11 +128,8 @@ TEST_CASE("OptionPricerBarrier - Naive Method: At Expiry", "[OptionPricerBarrier
 
 // Spot equals barrier edge case
 TEST_CASE("OptionPricerBarrier - Naive Method: Spot Equals Barrier", "[OptionPricerBarrierTest]") {
-    // When the spot equals the barrier for a knock-out option, the option is immediately knocked out.
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 100.0  // barrier equals the spot price
-    );
+    // When spot equals the barrier for a knock-out option, the option is immediately knocked out.
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 100.0); // barrier equals the spot price
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -158,11 +141,8 @@ TEST_CASE("OptionPricerBarrier - Naive Method: Spot Equals Barrier", "[OptionPri
 
 // High volatility scenario
 TEST_CASE("OptionPricerBarrier - Naive Method: High Volatility", "[OptionPricerBarrierTest]") {
-    // Testing under a scenario of high volatility to stress the simulation.
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 110.0
-    );
+    // Testing under a scenario of high volatility.
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 110.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.80; // high volatility
@@ -175,10 +155,7 @@ TEST_CASE("OptionPricerBarrier - Naive Method: High Volatility", "[OptionPricerB
 // Deep in-the-money knock-out call
 TEST_CASE("OptionPricerBarrier - Naive Method: Deep In-The-Money Knock-Out Call", "[OptionPricerBarrierTest]") {
     // A deep in-the-money call option where the strike is much lower than the spot.
-    BarrierOption bOpt(
-        50.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 150.0
-    );
+    BarrierOption bOpt(50.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 150.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -191,27 +168,20 @@ TEST_CASE("OptionPricerBarrier - Naive Method: Deep In-The-Money Knock-Out Call"
 // Deep out-of-the-money knock-out call
 TEST_CASE("OptionPricerBarrier - Naive Method: Deep Out-Of-The-Money Knock-Out Call", "[OptionPricerBarrierTest]") {
     // A deep out-of-the-money call option where the strike is much higher than the spot.
-    BarrierOption bOpt(
-        150.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 200.0
-    );
+    BarrierOption bOpt(150.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 200.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
     unsigned int sims   = 10000;
 
     double price = OptionPricerBarrier::calculatePriceNaive(bOpt, spotPrice, riskFreeRate, volatility, sims);
-    // A deep OTM option is expected to have a very low price.
     REQUIRE(price < 1.0);
 }
 
 // Deep in-the-money knock-in put
 TEST_CASE("OptionPricerBarrier - Naive Method: Deep In-The-Money Knock-In Put", "[OptionPricerBarrierTest]") {
     // A deep in-the-money put option where the strike is far above the spot.
-    BarrierOption bOpt(
-        150.0, 1.0, Option::Type::Put,
-        BarrierOption::BarrierType::KnockIn, 90.0
-    );
+    BarrierOption bOpt(150.0, 1.0, Option::Type::Put, BarrierOption::BarrierType::KnockIn, 90.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -223,17 +193,13 @@ TEST_CASE("OptionPricerBarrier - Naive Method: Deep In-The-Money Knock-In Put", 
 
 // Deep out-of-the-money knock-in put
 TEST_CASE("OptionPricerBarrier - Naive Method: Deep Out-Of-The-Money Knock-In Put", "[OptionPricerBarrierTest]") {
-    // A deep out-of-the-money put option where the strike is far below the spot and the barrier is set such that knock-in is unlikely.
-    BarrierOption bOpt(
-        50.0, 1.0, Option::Type::Put,
-        BarrierOption::BarrierType::KnockIn, 110.0
-    );
+    // A deep out-of-the-money put option where the strike is far below the spot and the barrier is set so that knock-in is unlikely.
+    BarrierOption bOpt(50.0, 1.0, Option::Type::Put, BarrierOption::BarrierType::KnockIn, 110.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
     unsigned int sims   = 10000;
 
     double price = OptionPricerBarrier::calculatePriceNaive(bOpt, spotPrice, riskFreeRate, volatility, sims);
-    // Expect the option to be priced very low since the barrier is unlikely to be hit.
     REQUIRE(price < 1.0);
 }

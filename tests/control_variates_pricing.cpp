@@ -24,8 +24,8 @@ TEST_CASE("OptionPricerBarrier - Control Variates: Basic Knock-Out Call", "[Opti
 
     REQUIRE(priceControl >= 0.0);
 
-    // 50% tolerance of the naive price for this test.
-    double tolerance = 0.50 * priceNaive;
+    // 20% tolerance of the naive price for this test.
+    double tolerance = 0.20 * priceNaive;
     REQUIRE(std::abs(priceControl - priceNaive) < tolerance);
 }
 
@@ -77,7 +77,7 @@ TEST_CASE("OptionPricerBarrier - Control Variates: Deep In-The-Money Knock-Out C
     double priceControl = OptionPricerBarrier::calculatePriceControlVariates(bOpt, spotPrice, riskFreeRate, volatility, sims);
     double priceNaive = OptionPricerBarrier::calculatePriceNaive(bOpt, spotPrice, riskFreeRate, volatility, sims);
     REQUIRE(priceControl >= 0.0);
-    double tolerance = 0.50 * priceNaive;
+    double tolerance = 0.10 * priceNaive;
     REQUIRE(std::abs(priceControl - priceNaive) < tolerance);
 }
 
@@ -89,7 +89,7 @@ TEST_CASE("OptionPricerBarrier - Control Variates: Deep Out-Of-The-Money Knock-O
     double priceControl = OptionPricerBarrier::calculatePriceControlVariates(bOpt, spotPrice, riskFreeRate, volatility, sims);
     double priceNaive = OptionPricerBarrier::calculatePriceNaive(bOpt, spotPrice, riskFreeRate, volatility, sims);
     REQUIRE(priceControl >= 0.0);
-    double tolerance = 0.50 * priceNaive;
+    double tolerance = 0.10 * priceNaive;
     REQUIRE(std::abs(priceControl - priceNaive) < tolerance);
 }
 
@@ -109,7 +109,7 @@ TEST_CASE("OptionPricerBarrier - Control Variates: Consistency with Increased Si
     unsigned int simsLow = 10000, simsHigh = 50000;
     double priceControlLow = OptionPricerBarrier::calculatePriceControlVariates(bOpt, spotPrice, riskFreeRate, volatility, simsLow);
     double priceControlHigh = OptionPricerBarrier::calculatePriceControlVariates(bOpt, spotPrice, riskFreeRate, volatility, simsHigh);
-    double tolerance = 0.15 * priceControlHigh;
+    double tolerance = 0.10 * priceControlHigh;
     REQUIRE(std::abs(priceControlLow - priceControlHigh) < tolerance);
 }
 

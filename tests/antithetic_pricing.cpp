@@ -26,7 +26,7 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: Basic Knock-Out Call", "[Opt
     // Ensure the antithetic method returns a non-negative price
     REQUIRE(priceAntithetic >= 0.0);
 
-    // Check that the antithetic price is close to the naive price (within 10% relative tolerance)
+    // Check that the antithetic price is close to the naive price
     double tolerance = 0.20 * priceNaive;
     REQUIRE(std::abs(priceAntithetic - priceNaive) < tolerance);
 }
@@ -49,7 +49,6 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: Knock-In Put", "[OptionPrice
 
     double priceAntithetic = OptionPricerBarrier::calculatePriceAntithetic(bOpt, spotPrice, riskFreeRate, volatility, sims);
 
-    // For a knock-in option, simply check that the price is non-negative.
     REQUIRE(priceAntithetic >= 0.0);
 }
 
@@ -79,10 +78,7 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: Low Simulations", "[OptionPr
 // Zero volatility edge case
 TEST_CASE("OptionPricerBarrier - Antithetic Method: Zero Volatility", "[OptionPricerBarrierAntithetic]") {
     // With zero volatility the underlying remains constant so the option payoff is deterministic
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 105.0
-    );
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call,BarrierOption::BarrierType::KnockOut, 105.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.0;  // no randomness
@@ -96,10 +92,7 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: Zero Volatility", "[OptionPr
 // Negative risk-free rate
 TEST_CASE("OptionPricerBarrier - Antithetic Method: Negative Risk-Free Rate", "[OptionPricerBarrierAntithetic]") {
     // Ensure the pricing function handles negative interest rates
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 105.0
-    );
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 105.0);
     double spotPrice    = 100.0;
     double riskFreeRate = -0.01; // negative interest rate
     double volatility   = 0.20;
@@ -112,10 +105,7 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: Negative Risk-Free Rate", "[
 // At expiry (zero time to maturity)
 TEST_CASE("OptionPricerBarrier - Antithetic Method: At Expiry", "[OptionPricerBarrierAntithetic]") {
     // Option with expiry set to zero should be priced at its intrinsic value
-    BarrierOption bOpt(
-        100.0, 0.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 105.0
-    );
+    BarrierOption bOpt(100.0, 0.0, Option::Type::Call,BarrierOption::BarrierType::KnockOut, 105.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -129,10 +119,7 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: At Expiry", "[OptionPricerBa
 // Spot equals barrier edge case
 TEST_CASE("OptionPricerBarrier - Antithetic Method: Spot Equals Barrier", "[OptionPricerBarrierAntithetic]") {
     // When the spot equals the barrier, the option should be knocked out immediately for knock-out options.
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 100.0  // barrier equals the spot price
-    );
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call,BarrierOption::BarrierType::KnockOut, 100.0); // barrier equals the spot price
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -145,10 +132,7 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: Spot Equals Barrier", "[Opti
 // High volatility scenario
 TEST_CASE("OptionPricerBarrier - Antithetic Method: High Volatility", "[OptionPricerBarrierAntithetic]") {
     // Testing under a scenario of high volatility
-    BarrierOption bOpt(
-        100.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 110.0
-    );
+    BarrierOption bOpt(100.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 110.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.80; // high volatility
@@ -164,11 +148,8 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: High Volatility", "[OptionPr
 
 // Deep in-the-money knock-out call
 TEST_CASE("OptionPricerBarrier - Antithetic Method: Deep In-The-Money Knock-Out Call", "[OptionPricerBarrierAntithetic]") {
-    // Test a deep in-the-money call where the strike is far below the spot
-    BarrierOption bOpt(
-        50.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 150.0
-    );
+    // Testing a deep in-the-money call where the strike is far below the spot
+    BarrierOption bOpt(50.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 150.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -185,27 +166,20 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: Deep In-The-Money Knock-Out 
 // Deep out-of-the-money knock-out call
 TEST_CASE("OptionPricerBarrier - Antithetic Method: Deep Out-Of-The-Money Knock-Out Call", "[OptionPricerBarrierAntithetic]") {
     // Test a deep out-of-the-money call option where the strike is much higher than the spot
-    BarrierOption bOpt(
-        150.0, 1.0, Option::Type::Call,
-        BarrierOption::BarrierType::KnockOut, 200.0
-    );
+    BarrierOption bOpt(150.0, 1.0, Option::Type::Call, BarrierOption::BarrierType::KnockOut, 200.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
     unsigned int sims   = 10000;
 
     double price = OptionPricerBarrier::calculatePriceAntithetic(bOpt, spotPrice, riskFreeRate, volatility, sims);
-    // A deep out-of-the-money option is expected to have a very low price.
     REQUIRE(price < 1.0);
 }
 
 // Deep in-the-money knock-in put
 TEST_CASE("OptionPricerBarrier - Antithetic Method: Deep In-The-Money Knock-In Put", "[OptionPricerBarrierAntithetic]") {
     // Test a deep in-the-money put option where the strike is far above the spot
-    BarrierOption bOpt(
-        150.0, 1.0, Option::Type::Put,
-        BarrierOption::BarrierType::KnockIn, 90.0
-    );
+    BarrierOption bOpt(150.0, 1.0, Option::Type::Put, BarrierOption::BarrierType::KnockIn, 90.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
@@ -222,16 +196,12 @@ TEST_CASE("OptionPricerBarrier - Antithetic Method: Deep In-The-Money Knock-In P
 // Deep out-of-the-money knock-in put
 TEST_CASE("OptionPricerBarrier - Antithetic Method: Deep Out-Of-The-Money Knock-In Put", "[OptionPricerBarrierAntithetic]") {
     // Test a deep out-of-the-money put option where the strike is far below the spot and the barrier is set such that knock-in is unlikely
-    BarrierOption bOpt(
-        50.0, 1.0, Option::Type::Put,
-        BarrierOption::BarrierType::KnockIn, 110.0
-    );
+    BarrierOption bOpt(50.0, 1.0, Option::Type::Put, BarrierOption::BarrierType::KnockIn, 110.0);
     double spotPrice    = 100.0;
     double riskFreeRate = 0.05;
     double volatility   = 0.20;
     unsigned int sims   = 10000;
 
     double price = OptionPricerBarrier::calculatePriceAntithetic(bOpt, spotPrice, riskFreeRate, volatility, sims);
-    // Expect the option to be priced very low since the barrier is unlikely to be hit.
     REQUIRE(price < 1.0);
 }
