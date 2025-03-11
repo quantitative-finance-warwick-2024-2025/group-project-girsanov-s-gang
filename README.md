@@ -38,48 +38,9 @@ This project focuses on the quantitative pricing of barrier options—derivative
 - **Automated Unit Tests:**  
   A series of tests (using Catch2) ensure that every component—from option pricing to data analysis—functions correctly.
 
-### Executing the Tests
 
-After building the project, you can run the tests in two ways:
 
-1. **Run All Tests at Once (Using CTest)**  
-   From your build directory, simply run:
-   ```bash
-   ctest
-
-This automatically discovers and executes all test executables (including 
-`naive_pricing`, `antithetic_pricing`, `control_variates_pricing`, 
-`importance_sampling_pricing`, `test_option`, `test_barrier_option`, and 
-`test_main`).
-
-2. **Run Individual Test Executables**
-If you prefer to run a specific test on its own, execute its binary directly from the build directory:
-
-**Linux/macOS:**
-```bash
-./naive_pricing
-./antithetic_pricing
-./control_variates_pricing
-./importance_sampling_pricing
-./option_tests
-./barrier_tests
-```
-
-**Windows:**
-```bash
-.\naive_pricing.exe
-.\antithetic_pricing.exe
-.\control_variates_pricing.exe
-.\importance_sampling_pricing.exe
-.\option_tests.exe
-.\barrier_tests.exe
-```
-
-### 5. Utilities
-- **Helper Tools:**  
-  Additional modules for output capturing and other supportive functions.
-
-## Build and Run Instructions
+# Build and Run Instructions
 
 ### Requirements
 - C++ compiler supporting C++17 or newer
@@ -133,6 +94,47 @@ Once compiled, run the main executable from the build directory:
   ```
 
 The application displays pricing results using each simulation technique and confirms the creation of analysis reports.
+
+
+### Executing the Tests
+
+After building the project, you can run the tests in two ways:
+
+1. **Run All Tests at Once (Using CTest)**  
+   From your build directory, simply run:
+   ```bash
+   ctest
+
+This automatically discovers and executes all test executables (including 
+`naive_pricing`, `antithetic_pricing`, `control_variates_pricing`, 
+`importance_sampling_pricing`, `test_option`, `test_barrier_option`, and 
+`test_main`).
+
+2. **Run Individual Test Executables**
+If you prefer to run a specific test on its own, execute its binary directly from the build directory:
+
+**Linux/macOS:**
+```bash
+./naive_pricing
+./antithetic_pricing
+./control_variates_pricing
+./importance_sampling_pricing
+./option_tests
+./barrier_tests
+```
+
+**Windows:**
+```bash
+.\naive_pricing.exe
+.\antithetic_pricing.exe
+.\control_variates_pricing.exe
+.\importance_sampling_pricing.exe
+.\option_tests.exe
+.\barrier_tests.exe
+```
+
+
+
 
 ## Final Thoughts
 This project demonstrates a robust implementation of Monte Carlo methods for barrier option pricing. Its modular design not only facilitates comprehensive analysis but also makes it straightforward to extend or integrate new simulation techniques in the future.
