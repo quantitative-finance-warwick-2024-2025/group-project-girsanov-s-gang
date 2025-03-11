@@ -217,3 +217,6 @@ You can add the changes from your personal branch to the main branch using pull 
 
 # Submission
 To submit, push your final project to your group's repository on GitHub on the main branch. Extract the contents of the repository to a zip file and submit it via my.wbs.
+
+## Conclusion
+This project demonstrates a comprehensive approach to barrier option pricing using multiple Monte Carlo methods and advanced variance reduction techniques, including naive Monte Carlo (GBM), antithetic variates, importance sampling, control variates, and stratified sampling. By maintaining a modular structure for the option models, pricing engines, and reporting tools, the codebase remains both extensible and maintainable. We hope this framework serves as a robust foundation for further exploration and enhancement within the field of computational finance.
