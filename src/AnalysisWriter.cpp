@@ -80,7 +80,8 @@ void OptionPriceVolatilityWriter::write(const std::string& filename) {
         {"Naive", [&](double sigma) { return OptionPricerBarrier::calculatePriceNaive(option_, spot_, r_, sigma, simulations_); }},
         {"Antithetic", [&](double sigma) { return OptionPricerBarrier::calculatePriceAntithetic(option_, spot_, r_, sigma, simulations_/2); }},
         {"ImportanceSampling", [&](double sigma) { return OptionPricerBarrier::calculatePriceImportanceSampling(option_, spot_, r_, sigma, simulations_/2); }},
-        {"ControlVariates", [&](double sigma) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma, simulations_); }}
+        {"ControlVariates", [&](double sigma) { return OptionPricerBarrier::calculatePriceControlVariates(option_, spot_, r_, sigma, simulations_); }},
+        {"Stratified", [&](double sigma) { return OptionPricerBarrierStratified::calculatePriceBarrierStratified(option_, spot_, r_, sigma, simulations_); }}
     };
     
     for (const auto& [name, calcPrice] : methods) {

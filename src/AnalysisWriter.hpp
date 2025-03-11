@@ -5,6 +5,7 @@
 #include <vector>
 #include "BarrierOption.hpp"
 #include "OptionPricerBarrier.hpp"
+#include "OptionPricerBarrierStratified.hpp"
 
 class AnalysisWriter {
 public:
