@@ -48,6 +48,10 @@ This project focuses on the quantitative pricing of barrier options—derivative
 - Clang (v10.0+)
 
 ### Compilation Steps
+1. Clone Repo with the following command: git clone repo link.
+2. Navigate to file location.
+
+There are two ways which you can run the the code and get the desired output we recommend the VScode method and the user should only use the other method if the first method doesnet work.
 
 #### Recommended Method (Using VSCode)
 For the smoothest experience—just like in our lectures—follow these steps:
