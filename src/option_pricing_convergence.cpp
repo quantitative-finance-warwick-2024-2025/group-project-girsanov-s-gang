@@ -3,6 +3,7 @@
 #include <vector>
 #include "../src/BarrierOption.hpp"
 #include "../src/OptionPricerBarrier.hpp"
+#include "../src/OptionPricerBarrierStratified.hpp"
 
 namespace option_pricing {
 
@@ -23,23 +24,26 @@ namespace option_pricing {
             BarrierOption::BarrierType::KnockOut,
             barrier      // barrier level
         );
-    
-        // Calculate the option prices using four different methods.
+
+        // Calculate the option prices using five different methods.
         double priceNaive = OptionPricerBarrier::calculatePriceNaive(bOpt, S0, riskFreeRate, volatility, sims);
         double priceAntithetic = OptionPricerBarrier::calculatePriceAntithetic(bOpt, S0, riskFreeRate, volatility, sims);
         double priceControl = OptionPricerBarrier::calculatePriceControlVariates(bOpt, S0, riskFreeRate, volatility, sims);
         double priceImportance = OptionPricerBarrier::calculatePriceImportanceSampling(bOpt, S0, riskFreeRate, volatility, sims);
-    
-        // Output the simulation count and computed prices in CSV format.
+        double priceStratified = OptionPricerBarrierStratified::calculatePriceBarrierStratified(bOpt, S0, riskFreeRate, volatility, sims);
+
+
+        // Output the simulation count and computed prices in CSV format, now including stratified.
         std::cout << sims << ","
                   << std::fixed << std::setprecision(6)
                   << priceNaive << ","
                   << priceAntithetic << ","
                   << priceControl << ","
-                  << priceImportance << "\n";
+                  << priceImportance << ","
+                  << priceStratified << "\n";
     }
-    
-    }
+
+}
 
 int main() {
     // Option parameters
@@ -51,7 +55,7 @@ int main() {
     const double volatility = 0.20;
 
     // Print CSV header
-    std::cout << "sims,naive,antithetic,control_variates,importance_sampling\n";
+    std::cout << "sims,naive,antithetic,control_variates,importance_sampling,stratified\n";
 
     // Define a series of simulation counts to study convergence
     std::vector<unsigned int> simulationCounts = {100, 1000, 5000, 10000, 50000, 100000};
