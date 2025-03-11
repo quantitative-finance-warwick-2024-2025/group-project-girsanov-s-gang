@@ -134,26 +134,6 @@ Once compiled, run the main executable from the build directory:
 
 The application displays pricing results using each simulation technique and confirms the creation of analysis reports.
 
-## Executing Tests
-To validate the project components:
-1. Navigate to the tests folder inside the build directory:
-   ```bash
-   cd tests
-   ```
-2. Run the test programs:
-   - **On Linux/Mac:**
-     ```bash
-     ./TestBarrierOption
-     ./TestPricingEngine
-     ./TestAnalysisModule
-     ```
-   - **On Windows:**
-     ```bash
-     TestBarrierOption.exe
-     TestPricingEngine.exe
-     TestAnalysisModule.exe
-     ```
-
 ## Final Thoughts
 This project demonstrates a robust implementation of Monte Carlo methods for barrier option pricing. Its modular design not only facilitates comprehensive analysis but also makes it straightforward to extend or integrate new simulation techniques in the future.
 
