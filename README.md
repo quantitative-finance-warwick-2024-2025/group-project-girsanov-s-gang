@@ -66,7 +66,7 @@ For the smoothest experience—just like in our lectures—follow these steps:
 1. **Clone the Repository**  
    Run the following command in your terminal:  
    ```bash
-   git clone <repo link>
+   git clone https://github.com/quantitative-finance-warwick-2024-2025/group-project-girsanov-s-gang.git
    ```
 1. **Open VSCode.**
 2. **Navigate to the project directory:** `group-project-girsanov-s-gang`
@@ -111,7 +111,7 @@ This automatically discovers and executes all test executables (including
 `test_main`).
 
 2. **Run Individual Test Executables**  
-If you prefer to run a specific test on its own, navigate to the tests directory within your build folder (note: there are two tests folders—one in `src/tests` and one in `build/tests`; you must use the latter) and execute the desired binary directly.
+If you prefer to run a specific test on its own, navigate to the tests directory within your build folder (note: there are two tests folders, one in `src/tests` and one in `build/tests`; you must use the latter) and execute the desired binary directly.
 
 **Linux/macOS:**
 ```bash
