@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     const double sigma = 0.2;    // Annualized volatility
     const double T = 1.0;        // Time to maturity (years)
     const double B = 110.0;       // Knock-out barrier level
-    const double b = 0.1;
+    const double b = 0.01;        // For extreme convergence the barrier may not be hit so some padding is included
     const unsigned simulations = 100000;  // Base simulation count
 
     // ================= Output Directory Setup (Fixed) =================
@@ -32,12 +32,12 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Initialize barrier option
+    // Initialize barrier option KnockOutCall
     BarrierOption knockOutCall(
         K, T, 
         Option::Type::Call,
         BarrierOption::BarrierType::KnockOut,
-        B+b
+        B-b
     );
 
     // Generate analysis results
