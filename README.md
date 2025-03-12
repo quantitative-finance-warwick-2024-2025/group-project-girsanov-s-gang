@@ -1,7 +1,7 @@
 # IB9JHO: Barrier Option Pricing
 
 ## Project Overview
-This project focuses on the quantitative pricing of barrier options—derivatives whose outcomes depend on whether an asset’s price breaches a set barrier during its life. Our approach employs Monte Carlo simulation enhanced by variance reduction techniques to obtain precise and efficient pricing estimates. The methods implemented include:
+This project focuses on the quantitative pricing of barrier options derivatives whose outcomes depend on whether an asset’s price breaches a set barrier during its life. Our approach employs Monte Carlo simulation enhanced by variance reduction techniques to obtain precise and efficient pricing estimates. The methods implemented include:
 
 - **Naive Monte Carlo (GBM)**
 - **Antithetic Variates**
@@ -15,7 +15,7 @@ This project focuses on the quantitative pricing of barrier options—derivative
 - **Base Option Class:**  
   Contains common attributes such as strike, expiry, and option type.
 - **BarrierOption Class:**  
-  Extends the base option with barrier-specific properties (barrier level, barrier type) and custom payoff calculations based on barrier breaches.
+  Extends the base option with barrier specific properties (barrier level, barrier type) and custom payoff calculations based on barrier breaches.
 
 ### 2. Pricing Engine
 - **Unified Interface:**  
@@ -44,7 +44,7 @@ This project focuses on the quantitative pricing of barrier options—derivative
   Contains the code for generating our UML diagram, which provides a high-level view of the project’s structure and dependencies.
 
 - **testing_barr.py (Barrier Pricing Test in Python)**  
-  This script was initially used to verify the correctness of our Naive model by comparing its output with online resources.
+  This script was initially used to verify the correctness of our Naive model.
 
 
 
