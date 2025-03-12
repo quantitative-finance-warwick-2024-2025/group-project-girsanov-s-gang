@@ -110,8 +110,8 @@ This automatically discovers and executes all test executables (including
 `importance_sampling_pricing`, `test_option`, `test_barrier_option`, and 
 `test_main`).
 
-2. **Run Individual Test Executables**
-If you prefer to run a specific test on its own, execute its binary directly from the build directory:
+2. **Run Individual Test Executables**  
+If you prefer to run a specific test on its own, navigate to the tests directory within your build folder (note: there are two tests folders—one in `src/tests` and one in `build/tests`; you must use the latter) and execute the desired binary directly.
 
 **Linux/macOS:**
 ```bash
