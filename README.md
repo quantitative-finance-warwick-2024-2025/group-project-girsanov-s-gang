@@ -47,22 +47,33 @@ This project focuses on the quantitative pricing of barrier options—derivative
 - (Optional) Catch2 framework for running unit tests
 - Clang (v10.0+)
 
-### Compilation Steps
-1. Clone Repo with the following command: git clone repo link.
-2. Navigate to file location.
 
-There are two ways which you can run the the code and get the desired output we recommend the VScode method and the user should only use the other method if the first method doesnet work.
+# Compilation Steps
 
-#### Recommended Method (Using VSCode)
+1. **Clone the Repository**  
+   Run the following command in your terminal:  
+   ```bash
+   git clone <repo link>
+   ```
+
+There are two ways to build and run the code. We recommend using the VSCode method. Use the alternative method only if you encounter issues with the VSCode workflow.
+
+## Recommended Method (Using VSCode)
+
 For the smoothest experience—just like in our lectures—follow these steps:
-1. **Open VSCode.**
-2. **Navigate to:** `group-project-girsanov-s-gang`
-3. **Click "Build"** at the bottom.
-4. **Click "Run"** at the bottom.
 
-This process automatically creates a `build` folder with all the linked and compiled outputs. Inside the build folder, you'll find multiple executables that can be run with the following commands:
-```
-[add commands]
+1. **Open VSCode.**
+2. **Navigate to the project directory:** `group-project-girsanov-s-gang`
+3. **Click "Build"** at the bottom of the VSCode window.
+4. When prompted, select the main `CMakeLists.txt` (not the test version).
+5. **Click "Run"** at the bottom.
+
+This process automatically creates a `build` folder that contains all the linked and compiled outputs. Within the build folder, you will find a `results` folder that holds various analysis files for reviewing our outputs. Additionally, multiple executables are generated. You can run them using the following commands:
+
+```bash
+./Girsanov_gang_proj
+./generate_convergence_output
+./option_pricing_convergence
 ```
 
 #### Alternative Method (For Extreme Cases)
@@ -75,7 +86,7 @@ If the VSCode approach fails, try these command-line steps:
    mkdir build
    cd build
    ```
-3. **Configure the Project with CMake:**
+3. **Configure the Project with CMake (Mak sure you are not in the build folder):**
    ```bash
    cmake ..
    ```
@@ -86,8 +97,8 @@ If the VSCode approach fails, try these command-line steps:
 
 *Note: The command-line method is only recommended if the VSCode process does not work.*
 
-### Running the Application
-Once compiled, run the main executable from the build directory:
+### ALternate Run Solution
+If the program has been succefully compiled but not ran you can run the main executable from the build directory manually by navigating to he build directory and running the following command:
 - **Linux/Mac:**
   ```bash
   ./Girsanov_gang_proj
@@ -97,7 +108,7 @@ Once compiled, run the main executable from the build directory:
   Girsanov_gang_proj.exe
   ```
 
-The application displays pricing results using each simulation technique and confirms the creation of analysis reports.
+The application should also create the exact same analysis report
 
 
 ### Executing the Tests
@@ -143,7 +154,7 @@ If you prefer to run a specific test on its own, execute its binary directly fro
 ## UML Diagram
 Below is a concise graphcial overview of our project only including our *key* classes:
 ![image](https://github.com/user-attachments/assets/188d73a1-2efa-4cbe-b729-f3b69aba539b)
-
+The following PlantUML diagram provides a high-level overview of the code and its dependencies. It intentionally omits the full subclass relationships for Analysis and Testing to avoid overcomplicating the diagram and to maintain clarity.
 
 
 ---
