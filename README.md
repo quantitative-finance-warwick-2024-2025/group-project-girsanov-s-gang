@@ -50,18 +50,15 @@ This project focuses on the quantitative pricing of barrier options—derivative
 
 # Compilation Steps
 
+
+## Recommended Method (Using VSCode)
+
+For the smoothest experience—just like in our lectures—follow these steps:
 1. **Clone the Repository**  
    Run the following command in your terminal:  
    ```bash
    git clone <repo link>
    ```
-
-There are two ways to build and run the code. We recommend using the VSCode method. Use the alternative method only if you encounter issues with the VSCode workflow.
-
-## Recommended Method (Using VSCode)
-
-For the smoothest experience—just like in our lectures—follow these steps:
-
 1. **Open VSCode.**
 2. **Navigate to the project directory:** `group-project-girsanov-s-gang`
 3. **Click "Build"** at the bottom of the VSCode window.
@@ -76,28 +73,7 @@ This process automatically creates a `build` folder that contains all the linked
 ./option_pricing_convergence
 ```
 
-#### Alternative Method (For Extreme Cases)
-If the VSCode approach fails, try these command-line steps:
-1. **Clone the Repository:**  
-   Download or clone the project to your local system.
-2. **Create a Build Directory:**  
-   In your terminal at the project root, run:
-   ```bash
-   mkdir build
-   cd build
-   ```
-3. **Configure the Project with CMake (Mak sure you are not in the build folder):**
-   ```bash
-   cmake ..
-   ```
-4. **Build the Project:**
-   ```bash
-   cmake --build .
-   ```
-
-*Note: The command-line method is only recommended if the VSCode process does not work.*
-
-### ALternate Run Solution
+### Alternate Run Solution
 If the program has been succefully compiled but not ran you can run the main executable from the build directory manually by navigating to he build directory and running the following command:
 - **Linux/Mac:**
   ```bash
