@@ -78,7 +78,7 @@ For the smoothest experience—just like in our lectures—follow these steps:
    git clone https://github.com/quantitative-finance-warwick-2024-2025/group-project-girsanov-s-gang.git
    ```
 1. **Open VSCode.**
-2. **Navigate to the project directory:** `group-project-girsanov-s-gang`
+2. **Navigate to the project directory:** `group-project-girsanov-s-gang` then `src/main.cpp`
 3. **Click "Build"** at the bottom of the VSCode window.
 4. When prompted, select the main `CMakeLists.txt` (not the test version).
 5. **Click "Run"** at the bottom.
