@@ -38,6 +38,15 @@ This project focuses on the quantitative pricing of barrier options—derivative
 - **Automated Unit Tests:**  
   A series of tests (using Catch2) ensure that every component, from option pricing to data analysis, functions correctly.
 
+### 5. External Files
+
+- **UMLDiagram.plantuml (PlantUML File)**   
+  Contains the code for generating our UML diagram, which provides a high-level view of the project’s structure and dependencies.
+
+- **testing_barr.py (Barrier Pricing Test in Python)**  
+  This script was initially used to verify the correctness of our Naive model by comparing its output with online resources.
+
+
 
 # Build and Run Instructions
 
