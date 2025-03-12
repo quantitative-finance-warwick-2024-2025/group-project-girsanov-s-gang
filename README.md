@@ -25,7 +25,7 @@ This project focuses on the quantitative pricing of barrier options derivatives 
 ### 2. Pricing Engines
 - **Core Pricing Interface:**  
   Multiple implementations of Monte Carlo methods encapsulated within their respective classes for flexibility:
-  - `OptionPricerBarrier.cpp/hpp`: **Naive Monte Carlo** pricing.
+  - `OptionPricerBarrier.cpp/hpp`: **Naive Monte Carlo**  aswell as the models listed below are all inlcuded within this file.
   - `OptionPricerBarrierAntithetic.cpp/hpp`: **Antithetic Variates** method.
   - `OptionPricerBarrierIS.cpp/hpp`: **Importance Sampling** method.
   - `OptionPricerBarrierStratified.cpp/hpp`: **Stratified Sampling** method.
